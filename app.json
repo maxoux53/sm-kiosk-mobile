@@ -1,0 +1,8 @@
+{
+  "android": {
+    "package": "be.smartdossier.kiosk"
+  },
+  "ios": {
+    "bundleIdentifier": "be.smartdossier.kiosk"
+  }
+}
