@@ -1,4 +1,4 @@
-import { JSX, use, useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { Text, View, TouchableOpacity, Alert, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

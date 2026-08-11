@@ -7,6 +7,7 @@ interface AuthContextType {
     isLoggedIn: boolean;
     isMember: boolean;
     setIsLoggedIn: (isLoggedIn: boolean) => void;
+    setIsMember: (isMember: boolean) => void;
     login: (token: string, userId: number) => void;
     logout: () => void;
     joinEvent: (eventId: number) => void;
@@ -52,7 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, isMember,setIsLoggedIn , login, logout, joinEvent, leaveEvent }}>
+        <AuthContext.Provider value={{ isLoggedIn, isMember, setIsLoggedIn, setIsMember, login, logout, joinEvent, leaveEvent }}>
             {children}
         </AuthContext.Provider>
     );

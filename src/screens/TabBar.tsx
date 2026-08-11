@@ -13,7 +13,7 @@ import DevOnly from "./DevOnlyScreen";
 const Tab = createNativeBottomTabNavigator<TabBarParamList>();
 
 export default function TabBar(): JSX.Element {
-    const { isLoggedIn, isMember, login, logout, joinEvent, leaveEvent } = useAuth();
+    const { isLoggedIn, isMember, login, logout, joinEvent, leaveEvent, setIsMember } = useAuth();
 
     return (
         <Tab.Navigator initialRouteName="Compte">
@@ -74,7 +74,7 @@ export default function TabBar(): JSX.Element {
                 name="Hidden2"
                 component={DevOnly}
                 options={{
-                    tabBarItemHidden: true,
+                    tabBarItemHidden: false,
                     title: "ToggleMember",
                     //role: "search",
                     tabBarIcon: () => ({ sfSymbol: "calendar.and.person" })
@@ -84,6 +84,8 @@ export default function TabBar(): JSX.Element {
                         e.preventDefault();
                         if (isMember) {
                             leaveEvent();
+                        } else {
+                            setIsMember(true);
                         }
                     }
                 }}
