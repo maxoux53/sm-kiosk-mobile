@@ -1,14 +1,10 @@
-import { JSX, useRef, useState } from "react";
+import { JSX } from "react";
 import { Text, View, FlatList, Image, TouchableOpacity, Alert } from "react-native";
 import { useBottomTabBarHeight } from "react-native-bottom-tabs";
 import { styles } from "../styles";
 import { connect } from "../api/connect";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CartItem, useCart } from "../contexts/CartContext";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { ProductBottomSheet } from "./ProductBottomSheet";
-import { ProductDetails } from "../types/items";
-import { it } from "node:test";
 
 export type Item = {
     id: number,

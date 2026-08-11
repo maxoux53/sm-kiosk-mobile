@@ -14,7 +14,7 @@ export default function JoinEventLanding(): JSX.Element {
         return (
             <View style={StyleSheet.absoluteFill}>
                 <CameraView
-                    style={StyleSheet.absoluteFillObject}
+                    style={StyleSheet.absoluteFill}
                     facing="back"
                     onBarcodeScanned={({ data }: BarcodeScanningResult) => {
                         console.log("QR Code scanned:", data);
@@ -25,7 +25,7 @@ export default function JoinEventLanding(): JSX.Element {
                         barcodeTypes: ["qr"],
                     }}
                 />
-                <View style={[localStyles.overlay, StyleSheet.absoluteFillObject]}>
+                <View style={[localStyles.overlay, StyleSheet.absoluteFill]}>
                     <TouchableOpacity style={localStyles.closeButton} onPress={() => setScanning(false)}>
                         <Text style={localStyles.closeText}>Fermer</Text>
                     </TouchableOpacity>

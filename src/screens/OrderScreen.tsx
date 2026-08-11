@@ -6,7 +6,7 @@ import { styles } from "../styles";
 import { CartItem, useCart } from "../contexts/CartContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { connect } from "../api/connect";
-import { Category, Product, ProductDetails, VAT } from "../types/items";
+import { ProductDetails } from "../types/items";
 
 
 export default function OrderScreen(): JSX.Element {

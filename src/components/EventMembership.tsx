@@ -15,7 +15,7 @@ export default function EventMembership(): JSX.Element {
         const getEvent = async () => {
             try {
                 const eventId = Number(await AsyncStorage.getItem('eventId'));
-                setEvent(await connect<Event>(`/interact/event/${eventId}/`, "GET"))
+                setEvent(await connect<Event>(`/interact/event/${eventId}`, "GET"))
             } catch(e) {
                 Alert.alert(
                     "Erreur",

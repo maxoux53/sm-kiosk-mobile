@@ -31,10 +31,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await AsyncStorage.removeItem('userId');
     };
     const joinEvent = async (eventId: number) => { 
-        setIsMember(true);
         try {
             await AsyncStorage.setItem('eventId', eventId.toString());
-            await connect("/interact/me", "GET"); 
+            await connect(`/interact/me/event/${eventId}`, "POST");
+            setIsMember(true);
         } catch (e) {
             Alert.alert(
                 "Erreur",
@@ -44,12 +44,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 ]
             );
         }
-
     };
-    const leaveEvent = async () => { 
-        setIsMember(false); 
-        await AsyncStorage.removeItem('eventId');
-        await AsyncStorage.removeItem('cart')
+    const leaveEvent = async () => {
+        try {
+            const eventId = await AsyncStorage.getItem('eventId');
+            if (eventId) {
+                await connect(`/interact/me/event/${eventId}`, "DELETE");
+            }
+        } catch (e) {
+            Alert.alert(
+                "Erreur",
+                `Une erreur est survenue : ${e}`,
+                [
+                    { text: "Ok" }
+                ]
+            );
+        } finally {
+            setIsMember(false); 
+            await AsyncStorage.removeItem('eventId');
+            await AsyncStorage.removeItem('cart');
+        }
     };
 
     return (

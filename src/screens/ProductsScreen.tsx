@@ -18,11 +18,14 @@ export default function ProductsScreen(): JSX.Element {
     useEffect(() => {
         const getData = async () => {
             try {
-                setCategories(await connect<Category[]>("/interact/category/", "GET"));
                 const eventId = Number(await AsyncStorage.getItem('eventId'));
-                setProduct(await connect<ProductDetails[]>(`/interact/event/${eventId}/products`, "GET"));
-                console.log(products);
-                setEvent(await connect<Event>(`/interact/event/${eventId}/`, "GET"))
+                const [cats, prod] = await Promise.all([
+                    connect<{ data: Category[] }>("/interact/category", "GET"),
+                    connect<{ data: ProductDetails[] }>(`/interact/event/${eventId}/products`, "GET"),
+                ]);
+                setCategories(cats.data);
+                setProduct(prod.data);
+                setEvent(await connect<Event>(`/interact/event/${eventId}`, "GET"))
             } catch(e) {
                 Alert.alert(
                     "Erreur",

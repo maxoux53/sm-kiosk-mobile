@@ -2,12 +2,12 @@ import { JSX } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { AccountStackParamList } from "../../types/navigation";
-import { useAuth } from "../../contexts/AuthContext.tsx";
+import { useAuth } from "../../contexts/AuthContext";
 
-import LoginScreen from "./LoginScreen.tsx";
-import ProfileScreen from "./ProfileScreen.tsx";
-import OrderHistoryScreen from "./OrderHistoryScreen.tsx";
-import RegisterScreen from "./RegisterScreen.tsx";
+import LoginScreen from "./LoginScreen";
+import ProfileScreen from "./ProfileScreen";
+import OrderHistoryScreen from "./OrderHistoryScreen";
+import RegisterScreen from "./RegisterScreen";
 
 const Stack = createNativeStackNavigator<AccountStackParamList>();
 
