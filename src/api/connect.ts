@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function connect<T>(path: string, method: string, body?: unknown): Promise<T> {
-  const api_url = "http://localhost:3001/v1";
+  const api_url = "https://sm-kiosk-production.up.railway.app/v1";
   const token = await AsyncStorage.getItem("token");
 
   const options: RequestInit = {
