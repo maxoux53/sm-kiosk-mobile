@@ -1,6 +1,10 @@
 import { apiClient, API_INTERACT_ROUTE } from "../client";
 import { User, Event, Purchase } from "../../types/api";
+import { AxiosError } from "axios";
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const getMyInfo = async (): Promise<User> => {
     const response = await apiClient.get<User>(
         `${API_INTERACT_ROUTE}me`
@@ -9,6 +13,9 @@ export const getMyInfo = async (): Promise<User> => {
     return response.data;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const updateMyInfo = async (user: User): Promise<User> => {
     const response = await apiClient.patch<User>(
         `${API_INTERACT_ROUTE}me`,
@@ -18,6 +25,9 @@ export const updateMyInfo = async (user: User): Promise<User> => {
     return response.data;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const deleteMyAccount = async (): Promise<void> => {
     await apiClient.delete<void>(
         `${API_INTERACT_ROUTE}me`
@@ -26,6 +36,9 @@ export const deleteMyAccount = async (): Promise<void> => {
     return;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const getMyEvent = async (): Promise<Event> => {
     const response = await apiClient.get<Event>(
         `${API_INTERACT_ROUTE}me/event`
@@ -34,6 +47,9 @@ export const getMyEvent = async (): Promise<Event> => {
     return response.data;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const joinEvent = async (eventId: number): Promise<{id: number}> => {
     const response = await apiClient.post<{id: number}>(
         `${API_INTERACT_ROUTE}me/event/${eventId}`
@@ -42,6 +58,9 @@ export const joinEvent = async (eventId: number): Promise<{id: number}> => {
     return response.data;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const leaveEvent = async (eventId: number): Promise<void> => {
     await apiClient.delete<void>(
         `${API_INTERACT_ROUTE}me/event/${eventId}`
@@ -50,6 +69,9 @@ export const leaveEvent = async (eventId: number): Promise<void> => {
     return;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const getMyPurchases = async (): Promise<Purchase[]> => {
     const response = await apiClient.get(
         `${API_INTERACT_ROUTE}me/purchases`

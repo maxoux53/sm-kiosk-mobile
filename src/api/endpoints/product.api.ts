@@ -1,6 +1,10 @@
 import { apiClient, API_INTERACT_ROUTE } from "../client";
 import { Product } from "../../types/api";
+import { AxiosError } from "axios";
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const getProduct = async (id: number): Promise<Product> => {
     const response = await apiClient.get<Product>(
         `${API_INTERACT_ROUTE}product/${id}`
@@ -9,6 +13,9 @@ export const getProduct = async (id: number): Promise<Product> => {
     return response.data;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const getAllProductsByEvent = async (eventId: number): Promise<Product[]> => {
     const response = await apiClient.get<Product[]>(
         `${API_INTERACT_ROUTE}event/${eventId}/products`
@@ -17,6 +24,9 @@ export const getAllProductsByEvent = async (eventId: number): Promise<Product[]>
     return response.data;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const createProduct = async (product: Product): Promise<Product> => {
     const response = await apiClient.post<Product>(
         `${API_INTERACT_ROUTE}product`,
@@ -26,6 +36,9 @@ export const createProduct = async (product: Product): Promise<Product> => {
     return response.data;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const updateProduct = async (product: Product): Promise<Product> => {
     const response = await apiClient.patch<Product>(
         `${API_INTERACT_ROUTE}product/${product.id}`,
@@ -35,6 +48,9 @@ export const updateProduct = async (product: Product): Promise<Product> => {
     return response.data;
 };
 
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
 export const deleteProduct = async (id: number): Promise<void> => {
     await apiClient.delete<void>(
         `${API_INTERACT_ROUTE}product/${id}`

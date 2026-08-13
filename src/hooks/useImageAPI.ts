@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { checkError } from "../utils/checkError";
-import * as authApi from "../api/endpoints/auth.api";
-import { token } from "../api/secureStore";
-import { LoginResponse } from "../types/api";
+import * as imageApi from "../api/endpoints/image.api";
+import { ImagePickerAsset } from "expo-image-picker";
+import { UploadImageResponse } from "../types/api";
 
-export default function useAuthAPI() {
+export default function useImageAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>();
 
     /**
-     * @throws {Error} Si la connexion échoue.
+     * @throws {Error} Si le téléversement échoue.
      */
-    const login = async (email: string, password: string): Promise<LoginResponse> => {
+    const uploadImage = async (imageFile: ImagePickerAsset): Promise<UploadImageResponse> => {
         setIsLoading(true);
         setErrorMessage(undefined);
         
         try {
-            const response = await authApi.login(email, password);
-            await token.write(response.token);
-
-            return response;
+            return await imageApi.uploadImage(
+                imageFile,
+                (await imageApi.fetchImgDirectUploadUrl()).uploadURL
+            );
         } catch (e) {
             setErrorMessage(checkError(e as Error));
             throw e;
@@ -31,6 +31,6 @@ export default function useAuthAPI() {
     return {
         isLoading,
         errorMessage,
-        login
+        uploadImage
     };
 }

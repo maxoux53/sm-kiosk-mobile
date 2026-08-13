@@ -1,25 +1,21 @@
 import { useState } from "react";
 import { checkError } from "../utils/checkError";
-import * as authApi from "../api/endpoints/auth.api";
-import { token } from "../api/secureStore";
-import { LoginResponse } from "../types/api";
+import * as eventApi from "../api/endpoints/event.api";
+import { Event } from "../types/api";
 
-export default function useAuthAPI() {
+export default function useEventAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>();
 
     /**
-     * @throws {Error} Si la connexion échoue.
+     * @throws {Error} Si la récupération échoue.
      */
-    const login = async (email: string, password: string): Promise<LoginResponse> => {
+    const getEvent = async (id: number): Promise<Event> => {
         setIsLoading(true);
         setErrorMessage(undefined);
         
         try {
-            const response = await authApi.login(email, password);
-            await token.write(response.token);
-
-            return response;
+            return await eventApi.getEvent(id);
         } catch (e) {
             setErrorMessage(checkError(e as Error));
             throw e;
@@ -31,6 +27,6 @@ export default function useAuthAPI() {
     return {
         isLoading,
         errorMessage,
-        login
+        getEvent
     };
 }

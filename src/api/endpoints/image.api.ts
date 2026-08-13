@@ -1,17 +1,21 @@
 import { apiClient } from "../client";
 import { ImagePickerAsset } from "expo-image-picker";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ImageUploadUrl, UploadImageResponse } from "../../types/api";
 
-const requestImgDirectUploadUrl = async (): Promise<string> => {
-    const response = await apiClient.get<ImageUploadUrl>(
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
+export const fetchImgDirectUploadUrl = async (): Promise<ImageUploadUrl> => {
+    return (await apiClient.get<ImageUploadUrl>(
         "img-upload"
-    );
-
-    return response.data.uploadURL;
+    )).data;
 };
 
-export const uploadImage = async (imageFile: ImagePickerAsset): Promise<UploadImageResponse> => {
+/**
+ * @throws {AxiosError} Si le téléversement échoue.
+ */
+export const uploadImage = async (imageFile: ImagePickerAsset, directUploadUrl: string): Promise<UploadImageResponse> => {
     const formData = new FormData();
 
     formData.append("file", {
@@ -21,7 +25,7 @@ export const uploadImage = async (imageFile: ImagePickerAsset): Promise<UploadIm
     } as unknown as Blob);
 
     const response = await axios.post<UploadImageResponse>(
-        await requestImgDirectUploadUrl(),
+        directUploadUrl,
         formData,
         {
             headers: {
