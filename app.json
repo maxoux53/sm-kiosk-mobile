@@ -4,5 +4,8 @@
   },
   "ios": {
     "bundleIdentifier": "be.smartdossier.kiosk"
-  }
+  },
+  "plugins": [
+    "expo-secure-store"
+  ]
 }
