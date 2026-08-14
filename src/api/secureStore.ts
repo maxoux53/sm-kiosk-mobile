@@ -11,5 +11,8 @@ export const token = {
     },
     clear: async (): Promise<void> => {
         await SecureStore.deleteItemAsync(SM_JWT_KEY);
+    },
+    doesExist: async (): Promise<boolean> => {
+        return Boolean(await SecureStore.getItemAsync(SM_JWT_KEY));
     }
 }
