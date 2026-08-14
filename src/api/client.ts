@@ -10,7 +10,7 @@ export const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(async (config) => {
     const jwt = await token.read();
-    
+
     if (jwt) {
         config.headers.Authorization = `Bearer ${jwt}`;
     }

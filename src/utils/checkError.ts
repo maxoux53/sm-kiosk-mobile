@@ -12,7 +12,7 @@ export const checkError = (e: Error): string => {
             case 400:
                 return "Requête invalide !";
             case 401:
-                return 'navigate("/login")'; // temporaire
+                return 'Accès interdit ! (401)'; // temporaire
             case 403:
                 return "Accès interdit !";
             case 404:
@@ -27,6 +27,6 @@ export const checkError = (e: Error): string => {
                 return "Code erreur inconnu !";
         }
     }
-    
+
     return `Erreur inconnue ! ${typeof e}`;
 }
