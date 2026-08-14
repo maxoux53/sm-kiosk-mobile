@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Event as EventType } from "../types/api";
+import { Event as EventType, User } from "../types/api";
 
 interface SliceState {
-  userId: number | undefined;
+  user: User | undefined;
   event: EventType | undefined;
 }
 
 
 const initialState: SliceState = {
-  userId: undefined,
+  user: undefined,
   event: undefined,
 };
 
@@ -16,8 +16,8 @@ export const Slice = createSlice({
   name: "Slice",
   initialState,
   reducers: {
-    setUserId: (state, action) => {
-      state.userId = action.payload;
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
     setEvent: (state, action) => {
       state.event = action.payload;
@@ -25,7 +25,7 @@ export const Slice = createSlice({
   },
 });
 
-export const { setUserId, setEvent } =
+export const { setUser, setEvent } =
   Slice.actions;
 
 export default Slice.reducer;

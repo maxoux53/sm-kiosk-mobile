@@ -32,7 +32,7 @@ export default function Camera() {
           isProcessingRef.current = true;
           navigator.goBack();
         } catch {
-          Alert.alert("Erreur", errorMessageEvent ?? errorMessageJoin);
+          Alert.alert(errorMessageEvent ?? errorMessageJoin ?? 'Erreur inconnue');
           isProcessingRef.current = false;
         }
       }} barcodeScannerSettings={{

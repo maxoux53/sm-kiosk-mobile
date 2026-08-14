@@ -24,7 +24,7 @@ export default function Event() {
           event !== undefined ? (
             <View style={styles.view2}>
               <Text style={styles.text1}>{event.name}</Text>
-              <Image source={{ uri: event.image }} style={{ width: 200, height: 200, borderRadius: 10 }} />
+              <Image source={{ uri: event.image }} style={exportStyles.image} />
               <TouchableOpacity
                 style={exportStyles.button}
                 onPress={async () => {

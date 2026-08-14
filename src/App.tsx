@@ -46,4 +46,9 @@ export const exportStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#000000',
   },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+  },
 });

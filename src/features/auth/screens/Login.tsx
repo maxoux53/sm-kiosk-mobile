@@ -19,7 +19,7 @@ export default function Login() {
       const response = await login(email, password);
       dispatch(setUserId(response.user.id));
     } catch (error) {
-      Alert.alert('Erreur : ', errorMessage ?? 'Une erreur est survenue');
+      Alert.alert('Erreur ', errorMessage ?? 'Une erreur est survenue');
     }
   };
 
