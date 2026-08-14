@@ -17,8 +17,9 @@ export default function useMeAPI() {
         try {
             return await meApi.getMyInfo();
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
-            throw e;
+            const msg = checkError(e as Error);
+            setErrorMessage(msg);
+            throw new Error(msg);
         } finally {
             setIsLoading(false);
         }
@@ -34,8 +35,9 @@ export default function useMeAPI() {
         try {
             return await meApi.updateMyInfo(user);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
-            throw e;
+            const msg = checkError(e as Error);
+            setErrorMessage(msg);
+            throw new Error(msg);
         } finally {
             setIsLoading(false);
         }
@@ -51,8 +53,9 @@ export default function useMeAPI() {
         try {
             return await meApi.deleteMyAccount();
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
-            throw e;
+            const msg = checkError(e as Error);
+            setErrorMessage(msg);
+            throw new Error(msg);
         } finally {
             setIsLoading(false);
         }
@@ -68,8 +71,9 @@ export default function useMeAPI() {
         try {
             return await meApi.getMyEvent();
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
-            throw e;
+            const msg = checkError(e as Error);
+            setErrorMessage(msg);
+            throw new Error(msg);
         } finally {
             setIsLoading(false);
         }
@@ -85,8 +89,9 @@ export default function useMeAPI() {
         try {
             return await meApi.joinEvent(eventId);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
-            throw e;
+            const msg = checkError(e as Error);
+            setErrorMessage(msg);
+            throw new Error(msg);
         } finally {
             setIsLoading(false);
         }
@@ -102,8 +107,9 @@ export default function useMeAPI() {
         try {
             return await meApi.leaveEvent(eventId);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
-            throw e;
+            const msg = checkError(e as Error);
+            setErrorMessage(msg);
+            throw new Error(msg);
         } finally {
             setIsLoading(false);
         }
@@ -119,8 +125,9 @@ export default function useMeAPI() {
         try {
             return await meApi.getMyPurchases();
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
-            throw e;
+            const msg = checkError(e as Error);
+            setErrorMessage(msg);
+            throw new Error(msg);
         } finally {
             setIsLoading(false);
         }
