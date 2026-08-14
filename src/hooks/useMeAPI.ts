@@ -19,7 +19,7 @@ export default function useMeAPI() {
         } catch (e) {
             const msg = checkError(e as Error);
             setErrorMessage(msg);
-            throw new Error(msg);
+            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -37,7 +37,7 @@ export default function useMeAPI() {
         } catch (e) {
             const msg = checkError(e as Error);
             setErrorMessage(msg);
-            throw new Error(msg);
+            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -55,7 +55,7 @@ export default function useMeAPI() {
         } catch (e) {
             const msg = checkError(e as Error);
             setErrorMessage(msg);
-            throw new Error(msg);
+            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -73,7 +73,7 @@ export default function useMeAPI() {
         } catch (e) {
             const msg = checkError(e as Error);
             setErrorMessage(msg);
-            throw new Error(msg);
+            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -91,7 +91,7 @@ export default function useMeAPI() {
         } catch (e) {
             const msg = checkError(e as Error);
             setErrorMessage(msg);
-            throw new Error(msg);
+            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -109,7 +109,7 @@ export default function useMeAPI() {
         } catch (e) {
             const msg = checkError(e as Error);
             setErrorMessage(msg);
-            throw new Error(msg);
+            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -127,7 +127,7 @@ export default function useMeAPI() {
         } catch (e) {
             const msg = checkError(e as Error);
             setErrorMessage(msg);
-            throw new Error(msg);
+            throw e;
         } finally {
             setIsLoading(false);
         }
