@@ -17,7 +17,8 @@ export default function useProductAPI() {
         try {
             return await productApi.getProduct(id);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -34,7 +35,8 @@ export default function useProductAPI() {
         try {
             return await productApi.getAllProductsByEvent(eventId);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -51,7 +53,8 @@ export default function useProductAPI() {
         try {
             return await productApi.createProduct(product);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -68,7 +71,8 @@ export default function useProductAPI() {
         try {
             return await productApi.updateProduct(product);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -85,7 +89,8 @@ export default function useProductAPI() {
         try {
             return await productApi.deleteProduct(id);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);

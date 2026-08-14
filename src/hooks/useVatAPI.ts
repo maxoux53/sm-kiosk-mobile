@@ -17,7 +17,8 @@ export default function useVatAPI() {
         try {
             return await vatApi.getVat(type);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -34,7 +35,8 @@ export default function useVatAPI() {
         try {
             return await vatApi.getAllVats();
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);

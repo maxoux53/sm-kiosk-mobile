@@ -17,8 +17,8 @@ export default function useMeAPI() {
         try {
             return await meApi.getMyInfo();
         } catch (e) {
-            const msg = checkError(e as Error);
-            setErrorMessage(msg);
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -35,8 +35,8 @@ export default function useMeAPI() {
         try {
             return await meApi.updateMyInfo(user);
         } catch (e) {
-            const msg = checkError(e as Error);
-            setErrorMessage(msg);
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -53,8 +53,8 @@ export default function useMeAPI() {
         try {
             return await meApi.deleteMyAccount();
         } catch (e) {
-            const msg = checkError(e as Error);
-            setErrorMessage(msg);
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -71,8 +71,8 @@ export default function useMeAPI() {
         try {
             return await meApi.getMyEvent();
         } catch (e) {
-            const msg = checkError(e as Error);
-            setErrorMessage(msg);
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -89,8 +89,8 @@ export default function useMeAPI() {
         try {
             return await meApi.joinEvent(eventId);
         } catch (e) {
-            const msg = checkError(e as Error);
-            setErrorMessage(msg);
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -107,8 +107,8 @@ export default function useMeAPI() {
         try {
             return await meApi.leaveEvent(eventId);
         } catch (e) {
-            const msg = checkError(e as Error);
-            setErrorMessage(msg);
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
@@ -125,8 +125,8 @@ export default function useMeAPI() {
         try {
             return await meApi.getMyPurchases();
         } catch (e) {
-            const msg = checkError(e as Error);
-            setErrorMessage(msg);
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);

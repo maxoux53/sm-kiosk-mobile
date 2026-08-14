@@ -21,7 +21,8 @@ export default function useAuthAPI() {
 
             return response;
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);

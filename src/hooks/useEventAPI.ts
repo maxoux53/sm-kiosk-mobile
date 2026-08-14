@@ -17,7 +17,8 @@ export default function useEventAPI() {
         try {
             return await eventApi.getEvent(id);
         } catch (e) {
-            setErrorMessage(checkError(e as Error));
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
             throw e;
         } finally {
             setIsLoading(false);
