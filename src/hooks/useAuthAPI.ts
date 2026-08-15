@@ -2,7 +2,7 @@ import { useState } from "react";
 import { checkError } from "../utils/checkError";
 import * as authApi from "../api/endpoints/auth.api";
 import { token } from "../api/secureStore";
-import { LoginResponse } from "../types/api";
+import { LoginResponse, SignUpRequest, SignUpResponse } from "../types/api";
 
 export default function useAuthAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -29,9 +29,31 @@ export default function useAuthAPI() {
         }
     };
 
+    /**
+     * @throws {Error} Si l'inscription échoue.
+     */
+    const signup = async (user: SignUpRequest): Promise<SignUpResponse> => {
+        setIsLoading(true);
+        setErrorMessage(undefined);
+        
+        try {
+            const response = await authApi.signup(user);
+            await token.write(response.token);
+
+            return response;
+        } catch (e) {
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
+            throw e;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return {
         isLoading,
         errorMessage,
-        login
+        login,
+        signup
     };
 }
