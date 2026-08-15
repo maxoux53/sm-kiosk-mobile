@@ -45,6 +45,9 @@ export default function useCart() {
         }
     };
 
+    /**
+     * @throws {Error} Si la sauvegarde échoue.
+     */
     const setCart = async (cart: OrderLine[]): Promise<void> => {
         setIsLoading(true);
         
@@ -59,10 +62,16 @@ export default function useCart() {
         }
     };
 
+    /**
+     * @throws {Error} Si la suppression échoue.
+     */
     const clearCart = async (): Promise<void> => {
         return setCart(new Array<OrderLine>());
     }
 
+    /**
+     * @throws {Error} Si l'ajout au panier échoue.
+     */
     const addToCart = async (product_id: number, quantity: number): Promise<void> => {
         setIsLoading(true);
         
@@ -93,6 +102,9 @@ export default function useCart() {
         }
     };
 
+    /**
+     * @throws {Error} Si la suppression échoue.
+     */
     const removeFromCart = async (product_id: number): Promise<void> => {
         setIsLoading(true);
         
@@ -109,6 +121,9 @@ export default function useCart() {
         }
     };
 
+    /**
+     * @throws {Error} Si la mise à jour échoue.
+     */
     const updateQuantity = async (product_id: number, quantity: number): Promise<void> => {
         if (quantity < 0) {
             throw new Error("Quantity cannot be negative");
@@ -140,6 +155,9 @@ export default function useCart() {
         }
     };
 
+    /**
+     * @throws {Error} Si le calcul échoue.
+     */
     const totalPrice = async (): Promise<number> => {
         setIsLoading(true);
 
@@ -165,6 +183,9 @@ export default function useCart() {
         }
     };
 
+    /**
+     * @throws {Error} Si la mise à jour échoue.
+     */
     const invalidateAndRefreshCartPrices = async (): Promise<number> => {
         setIsLoading(true);
 
