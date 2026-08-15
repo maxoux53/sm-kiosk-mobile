@@ -4,7 +4,7 @@ import { exportStyles } from '../../../App';
 import useAuthAPI from '../../../hooks/useAuthAPI';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUserId } from '../../../store/slice';
+import { setUser } from '../../../store/slice';
 import Loader from '../../../components/Loader';
 
 export default function Login() {
@@ -17,9 +17,9 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const response = await login(email, password);
-      dispatch(setUserId(response.user.id));
-    } catch (error) {
-      Alert.alert('Erreur ', errorMessage ?? 'Une erreur est survenue');
+      dispatch(setUser(response.user));
+    } catch {
+      Alert.alert(errorMessage ?? 'Une erreur est survenue');
     }
   };
 

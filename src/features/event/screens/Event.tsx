@@ -1,20 +1,31 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
 import { useCameraPermissions, CameraView } from 'expo-camera';
-import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { exportStyles } from '../../../App';
-import { RootState } from '../../../store/store';
 import Loader from '../../../components/Loader';
 import { Alert, Image } from 'react-native';
 import useMeAPI from '../../../hooks/useMeAPI';
-import { setEvent } from '../../../store/slice';
+import { Event as EventType } from '../../../types/api';
+import { isAxiosError } from 'axios';
 
 export default function Event() {
   const navigator = useNavigation();
-  const dispatch = useDispatch();
-  const { leaveEvent, isLoading, errorMessage } = useMeAPI();
+  const { leaveEvent, getMyEvent, isLoading, errorMessage } = useMeAPI();
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
-  const event = useSelector((state: RootState) => state.Slice.event);
+  const [event, setEvent] = useState<EventType>();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setEvent(await getMyEvent());
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status !== 404) {
+          Alert.alert(errorMessage ?? error.response?.statusText.toString()!);
+        }
+      }
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -30,7 +41,6 @@ export default function Event() {
                 onPress={async () => {
                   try {
                     await leaveEvent(event.id);
-                    dispatch(setEvent(undefined));
                   } catch {
                     Alert.alert('Erreur', errorMessage ?? 'Impossible de quitter l\'évènement');
                   }

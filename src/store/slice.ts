@@ -3,13 +3,11 @@ import { Event as EventType, User } from "../types/api";
 
 interface SliceState {
   user: User | undefined;
-  event: EventType | undefined;
 }
 
 
 const initialState: SliceState = {
   user: undefined,
-  event: undefined,
 };
 
 export const Slice = createSlice({
@@ -19,13 +17,10 @@ export const Slice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
-    setEvent: (state, action) => {
-      state.event = action.payload;
-    },
   },
 });
 
-export const { setUser, setEvent } =
+export const { setUser } =
   Slice.actions;
 
 export default Slice.reducer;

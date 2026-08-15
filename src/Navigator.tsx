@@ -16,7 +16,6 @@ import Loader from './components/Loader';
 import { token } from './api/secureStore';
 import { AxiosError, isAxiosError } from 'axios';
 
-
 const Tab = createBottomTabNavigator();
 
 export default function Navigator() {

@@ -1,11 +1,14 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { exportStyles } from '../../../App';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store/store';
+import { setUser } from '../../../store/slice';
+import { token } from '../../../api/secureStore';
 
 export default function Account() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.Slice.user);
 
   return (
@@ -16,6 +19,10 @@ export default function Account() {
         <TouchableOpacity style={exportStyles.button} onPress={() => navigation.navigate('OrderHistory')}>
           <Text style={styles.text2}>Historique des commandes</Text>
         </TouchableOpacity>
+        <Button title="Se déconnecter" onPress={() => {
+          dispatch(setUser(undefined));
+          token.clear();
+        }} />
       </View>
     </View>
   )
