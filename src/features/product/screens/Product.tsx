@@ -1,42 +1,47 @@
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
-import { useRef } from 'react';
-import SegmentedControl from '@expo/ui/community/segmented-control';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { useCallback } from 'react';
+import { useState, useRef } from 'react';
 import useProductAPI from '../../../hooks/useProductAPI';
 import useCategoryAPI from '../../../hooks/useCategoryAPI';
 import { Product as ProductType, Category } from '../../../types/api';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-
-
-const Tab = createBottomTabNavigator();
+import useMeAPI from '../../../hooks/useMeAPI';
+import Loader from '../../../components/Loader';
+import SegmentedControl from '@expo/ui/community/segmented-control';
+import { Event } from '../../../types/api';
+import { useFocusEffect } from '@react-navigation/native';
+import useCart from '../../../hooks/useCart';
 
 export default function Product() {
+  const { getMyEvent, isLoading: isLoadingEvent, errorMessage: errorMessageEvent } = useMeAPI();
   const { getAllProductsByEvent, isLoading: isLoadingProducts, errorMessage: errorMessageProducts } = useProductAPI();
   const { getCategoriesByEvent, isLoading: isLoadingCategories, errorMessage: errorMessageCategories } = useCategoryAPI();
-  const bottomSheetRef = useRef(null);
+  const { addToCart} = useCart();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [categories, setCategories] = useState<Array<Category>>([]);
   const [products, setProducts] = useState<Array<ProductType>>([]);
-  const event = useSelector((state: RootState) => state.Slice.event);
+  const [event, setEvent] = useState<Event | undefined>();
+  const eventId = useSelector((state: RootState) => state.Slice.eventId);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        if (!event?.id) return;
-        //setCategories(await getCategoriesByEvent(event.id));
-        setProducts(await getAllProductsByEvent(event.id));
-      } catch (e) {
-        Alert.alert('Erreur', errorMessageCategories ?? errorMessageProducts ?? e.message);
-      }
-    })();
-  }, [event]);
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        try {
+          if (eventId === undefined) return;
+          setEvent(await getMyEvent());
+          setCategories(await getCategoriesByEvent(eventId));
+          setProducts(await getAllProductsByEvent(eventId));
+        } catch {
+          Alert.alert('Erreur', errorMessageCategories ?? errorMessageProducts ?? errorMessageEvent ?? 'Erreur inconnue');
+        }
+      })();
+    }, [eventId])
+  );
 
-  return isLoadingProducts || isLoadingCategories ? (
-    <ActivityIndicator />
-  ) : (
+  return (
     <View style={styles.container}>
+      {isLoadingEvent || isLoadingCategories || isLoadingProducts && <Loader />}
       <Text style={styles.text1}>{event?.name}</Text>
       <View style={styles.view1}>
         <SegmentedControl
@@ -49,10 +54,25 @@ export default function Product() {
       </View>
       <View style={styles.view2}>
         {products.map((product) => {
-          if (product.category_id !== categories[selectedIndex]?.id) return null;
+          if (product.category?.id !== categories[selectedIndex]?.id) return null;
           return (
-            <TouchableOpacity key={product.id} style={styles.button}>
-              <Image source={{ uri: product.picture }} style={{ width: 100, height: 100, borderRadius: 5 }} />
+            <TouchableOpacity key={product.id} onPress={() => {
+              Alert.prompt("Veuillez entrer la quantité", undefined, [
+                {
+                  text: "OK", onPress: async (value: string | undefined) => {
+                    if (value) {
+                      const quantity = parseInt(value);
+                      if (!quantity) {
+                        Alert.alert("La quantité doit être un nombre positif");
+                      } else {
+                        await addToCart(product.id, quantity);
+                      }
+                    }
+                  }
+                },
+              ])
+            }} style={styles.button}>
+              <Image source={{ uri: product.picture }} style={styles.image} />
               <Text style={styles.text2}>{product.label}</Text>
               <Text style={styles.text3}>{product.excl_vat_price}€</Text>
             </TouchableOpacity>
@@ -105,5 +125,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'bold',
     textAlign: 'left',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 5,
   },
 })

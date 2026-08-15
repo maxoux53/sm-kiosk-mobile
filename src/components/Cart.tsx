@@ -1,67 +1,81 @@
 import { View, Text, StyleSheet, Alert, Image } from 'react-native'
-import { Product, Purchase } from '../types/api'
-import { useState, useEffect } from 'react'
-import useProductAPI from '../hooks/useProductAPI';
-import { exportStyles } from '../App';
+import { Purchase } from '../types/api'
+import { Vat } from '../types/api'
+import { useCallback, useMemo, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
+import useVatAPI from '../hooks/useVatAPI';
+import Loader from './Loader';
 
-export default function Cart({ purchases }: { purchases: Array<Purchase> }) {
-  const [products, setProducts] = useState<Array<Product>>([]);
-  const { getProduct, isLoading, errorMessage } = useProductAPI();
+export default function Cart({ purchase }: { purchase: Purchase }) {
+  const [vats, setVats] = useState<Array<Vat>>([]);
+  const { getAllVats, isLoading, errorMessage } = useVatAPI();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const productsTemp: Array<Product> = [];
-        purchases.map((purchase) => {
-          purchase.order_line.map(async (orderLine) => {
-            const product = await getProduct(orderLine.product_id);
-            if (product) {
-              productsTemp.push(product);
-            }
-          })
-        })
-        setProducts(productsTemp);
-      } catch {
-        Alert.alert(errorMessage ?? "Une erreur est survenue");
-      }
-    })()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        try {
+          setVats(await getAllVats());
+        } catch {
+          Alert.alert(errorMessage ?? 'Erreur inconnue');
+        }
+      })()
+    }, [])
+  )
+
+  const { subTotal, vatAmount, total } = useMemo(() => {
+    let subTotalCalc = 0;
+    let vatAmountCalc = 0;
+    let totalCalc = 0;
+
+    if (purchase && vats && vats.length > 0) {
+      purchase.order_line.forEach((orderLine) => {
+        const excl = (orderLine.price ?? orderLine.product?.excl_vat_price ?? 0) * orderLine.quantity;
+        Alert.alert(orderLine.product?.category?.vat_type ?? 'Aucun type de TVA');
+        const rate = vats.find(v => v.type === orderLine.product?.category?.vat_type)?.rate ?? 0;
+        const vat = excl * (rate / 100);
+        subTotalCalc += excl;
+        vatAmountCalc += vat;
+        totalCalc += excl + vat;
+      });
+    }
+
+    return { subTotal: subTotalCalc, vatAmount: vatAmountCalc, total: totalCalc };
+  }, [purchase, vats]);
 
   return (
     <>
       <View style={styles.view1}>
+        {isLoading && <Loader/>}
         {
-          purchases.map((purchase) => (
-            purchase.order_line.map((orderLine) => (
-              <View key={orderLine.purchase_id ?? "*" + orderLine.product_id} style={styles.view3}>
-                <View>
-                  <Image source={{uri: products.find((product) => product.id === orderLine.product_id)?.picture}} style={exportStyles.image} />
-                </View>
-                <View>
-                  <Text>Catégorie</Text>
-                  <Text>Nom du produit</Text>
-                  <Text>{orderLine.quantity}</Text>
-                </View>
-                <View>
-                  <Text>{orderLine.price}</Text>
-                </View>
+          purchase.order_line.map((orderLine) => (
+            <View key={purchase.id + orderLine.product_id} style={styles.view3}>
+              <View>
+                <Image source={{uri: orderLine.product?.picture}} style={styles.image} />
               </View>
-            ))
+              <View>
+                <Text>{orderLine.product?.category?.label}</Text>
+                <Text>{orderLine.product?.label}</Text>
+                <Text>Quantité : {orderLine.quantity}</Text>
+              </View>
+              <View>
+                <Text>{orderLine.price}€</Text>
+              </View>
+            </View>
           ))
         }
       </View>
       <View style={styles.view2}>
         <View style={styles.view3}>
           <Text>sous-total</Text>
-          <Text>€</Text>
+          <Text>{subTotal}€</Text>
         </View>
         <View style={styles.view3}>
           <Text>Taxe</Text>
-          <Text>€</Text>
+          <Text>{vatAmount}€</Text>
         </View>
         <View style={styles.view3}>
           <Text>Total</Text>
-          <Text>€</Text>
+          <Text>{total}€</Text>
         </View>
       </View>
     </>
@@ -92,8 +106,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   image: {
-    width: 10,
-    height: 10,
+    width: 80,
+    height: 80,
     borderRadius: 5,
   },
 })

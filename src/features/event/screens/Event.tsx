@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useCameraPermissions, CameraView } from 'expo-camera';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { exportStyles } from '../../../App';
 import Loader from '../../../components/Loader';
 import { Alert, Image } from 'react-native';
@@ -15,21 +15,20 @@ export default function Event() {
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [event, setEvent] = useState<EventType>();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        setEvent(await getMyEvent());
-      } catch (error) {
-        if (isAxiosError(error) && error.response?.status !== 404) {
-          Alert.alert(errorMessage ?? error.response?.statusText.toString()!);
-        }
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    Alert.alert('Event', event !== undefined ? event.name : 'No event');
-  }, [event]);
+  useFocusEffect(
+      useCallback(() => {
+        (async () => {
+          try {
+            const result = await getMyEvent();
+            setEvent(result);
+          } catch (error) {
+            if (isAxiosError(error) && error.response?.status !== 404) {
+              Alert.alert(errorMessage ?? error.response?.statusText.toString()!);
+            }
+          }
+        })();
+      }, [])
+    );
 
   return (
     <View style={styles.container}>

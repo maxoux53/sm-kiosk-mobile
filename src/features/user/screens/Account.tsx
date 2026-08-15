@@ -1,18 +1,39 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { exportStyles } from '../../../App';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../../store/store';
-import { setUser } from '../../../store/slice';
 import { token } from '../../../api/secureStore';
+import useMeAPI from '../../../hooks/useMeAPI';
+import Loader from '../../../components/Loader';
+import { useCallback } from 'react';
+import { useState } from 'react';
+import { User } from '../../../types/api';
+import { Alert } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { setUserId, setEventId } from '../../../store/slice';
 
 export default function Account() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.Slice.user);
+  const [user, setUser] = useState<User | undefined>();
+  const { getMyInfo, isLoading, errorMessage } = useMeAPI();
+
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        try {
+          const userTemp = await getMyInfo();
+          setUser(userTemp);
+          dispatch(setUserId(userTemp.id));
+        } catch {
+          Alert.alert(errorMessage ?? "Erreur inconnue");
+        }
+      })();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
+      {isLoading && <Loader/>}
       <View style={styles.view1}>
         <Text style={styles.text1}>{user?.email}</Text>
         <Image source={{ uri: user?.avatar }} style={exportStyles.image} />
@@ -20,7 +41,8 @@ export default function Account() {
           <Text style={styles.text2}>Historique des commandes</Text>
         </TouchableOpacity>
         <Button title="Se déconnecter" onPress={() => {
-          dispatch(setUser(undefined));
+          dispatch(setUserId(undefined));
+          dispatch(setEventId(undefined));
           token.clear();
         }} />
       </View>

@@ -4,7 +4,7 @@ import { exportStyles } from '../../../App';
 import useAuthAPI from '../../../hooks/useAuthAPI';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../../../store/slice';
+import { setUserId } from '../../../store/slice';
 import Loader from '../../../components/Loader';
 
 export default function Login() {
@@ -17,7 +17,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       const response = await login(email, password);
-      dispatch(setUser(response.user));
+      dispatch(setUserId(response.user.id));
     } catch {
       Alert.alert(errorMessage ?? 'Une erreur est survenue');
     }
@@ -29,8 +29,8 @@ export default function Login() {
       <View style={styles.view1}>
         <Text style={styles.text1}>Se connecter</Text>
         <View style={styles.view2}>
-          <TextInput style={exportStyles.input} placeholder='Email' onChangeText={setEmail} />
-          <TextInput style={exportStyles.input} placeholder='Mot de passe' onChangeText={setPassword} />
+          <TextInput returnKeyType='next' keyboardType='email-address' autoCapitalize='none' autoCorrect={false} autoComplete='email' textContentType='emailAddress' style={exportStyles.input} placeholder='Email' onChangeText={setEmail} />
+          <TextInput returnKeyType='done' secureTextEntry autoCapitalize='none' autoCorrect={false} autoComplete='password' textContentType='password' style={exportStyles.input} placeholder='Mot de passe' onChangeText={setPassword} />
           <TouchableOpacity style={exportStyles.button} onPress={handleLogin} disabled={isLoading}>
             <Text style={styles.text2}>Se connecter</Text>
           </TouchableOpacity>

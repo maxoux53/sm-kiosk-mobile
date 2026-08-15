@@ -11,7 +11,7 @@ import { RootState } from './store/store';
 import { useEffect } from 'react';
 import useMeAPI from './hooks/useMeAPI';
 import { Alert } from 'react-native';
-import { setUser, setHasEvent } from './store/slice';
+import { setUserId, setEventId } from './store/slice';
 import Loader from './components/Loader';
 import { token } from './api/secureStore';
 import { AxiosError, isAxiosError } from 'axios';
@@ -21,39 +21,33 @@ const Tab = createBottomTabNavigator();
 export default function Navigator() {
   const { getMyInfo, getMyEvent, isLoading, errorMessage } = useMeAPI();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.Slice.user);
-  const hasEvent = useSelector((state: RootState) => state.Slice.hasEvent);
+  const userId = useSelector((state: RootState) => state.Slice.userId);
+  const eventId = useSelector((state: RootState) => state.Slice.eventId);
 
   useEffect(() => {
     (async () => {
       if (!(await token.read())) return;
       try {
         const user = await getMyInfo();
-        dispatch(setUser(user));
+        dispatch(setUserId(user.id));
         const event = await getMyEvent();
-        dispatch(setHasEvent(event !== undefined));
+        dispatch(setEventId(event !== undefined ? event.id : undefined));
       } catch (error) {
         if (isAxiosError(error) && error.response?.status !== 404) {
           Alert.alert(errorMessage ?? error.response?.statusText.toString()!);
         }
       }
     })();
-  }, []);
+  }, [eventId, userId]);
 
   return (
     <NavigationContainer >
       {isLoading && <Loader/>}
-      {user !== undefined ? (
+      {userId !== undefined ? (
         <Tab.Navigator initialRouteName='User' screenOptions={{headerShown: false}}>
         <Tab.Screen name="Event" component={EventNavigator} />
-        {
-          hasEvent ? (
-            <>
-              <Tab.Screen name="Product" component={ProductNavigator} />
-              <Tab.Screen name="Order" component={OrderNavigator} />
-            </>
-          ) : null
-        }
+        {eventId !== undefined && <Tab.Screen name="Product" component={ProductNavigator} />}
+        {eventId !== undefined && <Tab.Screen name="Order" component={OrderNavigator} />}
         <Tab.Screen name="User" component={UserNavigator} />
         </Tab.Navigator>
     ) : (

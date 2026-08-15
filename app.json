@@ -6,6 +6,12 @@
     "bundleIdentifier": "be.smartdossier.kiosk"
   },
   "plugins": [
-    "expo-secure-store"
+    "expo-secure-store",
+    [
+      "expo-image-picker",
+      {
+        "photosPermission": "L'application accède à vos photos pour choisir un avatar."
+      }
+    ]
   ]
 }

@@ -12,7 +12,7 @@ export const checkError = (e: Error): string => {
             case 400:
                 return "Requête invalide !";
             case 401:
-                return 'Accès interdit ! (401)'; // temporaire
+                return 'Accès interdit !';
             case 403:
                 return "Accès interdit !";
             case 404:

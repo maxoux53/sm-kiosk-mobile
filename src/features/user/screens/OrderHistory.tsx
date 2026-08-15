@@ -1,28 +1,29 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { exportStyles } from '../../../App';
-import Cart from '../../../components/Cart';
-import { useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
 import useMeAPI from '../../../hooks/useMeAPI';
 import { Purchase } from '../../../types/api';
 import Loader from '../../../components/Loader';
+import Cart from '../../../components/Cart';
 
 export default function Account() {
   const navigation = useNavigation();
   const { getMyPurchases, isLoading, errorMessage } = useMeAPI();
   const [purchases, setPurchases] = useState<Array<Purchase>>([]);
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
     (async () => {
       try {
         const purchases = await getMyPurchases();
-        setPurchases(purchases)
+        setPurchases(purchases);
       } catch {
         Alert.alert(errorMessage ?? "Erreur inconnue");
-      }
-    })();
-  }, []);
+        }
+      })();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -32,7 +33,13 @@ export default function Account() {
         {purchases.length === 0 ? (
           <Text style={styles.text2}>Aucune commande n'a été effectuée</Text>
         ) : (
-          <Cart purchases={purchases}/>
+          <View style={styles.view2}>
+            {
+              purchases.map((purchase, index) => (
+                <Cart key={index} purchase={purchase} />
+              ))
+            }
+          </View>
         )}
       </View>
     </View>
@@ -48,10 +55,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   view1: {
-    width: '80%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
+    gap: 32,
+  },
+  view2: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 32,
   },
   text1: {
     fontSize: 24,
@@ -60,7 +73,7 @@ const styles = StyleSheet.create({
   },
   text2: {
     fontSize: 16,
-    color: '#fff',
-    fontFamily: 'bold'
+    fontFamily: 'bold',
+    textAlign: 'center',
   },
 })

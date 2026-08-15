@@ -2,30 +2,30 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Event as EventType, User } from "../types/api";
 
 interface SliceState {
-  user: User | undefined;
-  hasEvent: boolean;
+  userId: User | undefined;
+  eventId: number | undefined;
 }
 
 
 const initialState: SliceState = {
-  user: undefined,
-  hasEvent: false,
+  userId: undefined,
+  eventId: undefined,
 };
 
 export const Slice = createSlice({
   name: "Slice",
   initialState,
   reducers: {
-    setUser: (state, action) => {
-      state.user = action.payload;
+    setUserId: (state, action) => {
+      state.userId = action.payload;
     },
-    setHasEvent: (state, action) => {
-      state.hasEvent = action.payload;
+    setEventId: (state, action) => {
+      state.eventId = action.payload;
     },
   },
 });
 
-export const { setUser, setHasEvent } =
+export const { setUserId, setEventId } =
   Slice.actions;
 
 export default Slice.reducer;
