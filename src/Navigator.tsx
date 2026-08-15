@@ -11,7 +11,7 @@ import { RootState } from './store/store';
 import { useEffect } from 'react';
 import useMeAPI from './hooks/useMeAPI';
 import { Alert } from 'react-native';
-import { setUser, setEvent } from './store/slice';
+import { setUser, setHasEvent } from './store/slice';
 import Loader from './components/Loader';
 import { token } from './api/secureStore';
 import { AxiosError, isAxiosError } from 'axios';
@@ -22,7 +22,7 @@ export default function Navigator() {
   const { getMyInfo, getMyEvent, isLoading, errorMessage } = useMeAPI();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.Slice.user);
-  const event = useSelector((state: RootState) => state.Slice.event);
+  const hasEvent = useSelector((state: RootState) => state.Slice.hasEvent);
 
   useEffect(() => {
     (async () => {
@@ -31,7 +31,7 @@ export default function Navigator() {
         const user = await getMyInfo();
         dispatch(setUser(user));
         const event = await getMyEvent();
-        dispatch(setEvent(event));
+        dispatch(setHasEvent(event !== undefined));
       } catch (error) {
         if (isAxiosError(error) && error.response?.status !== 404) {
           Alert.alert(errorMessage ?? error.response?.statusText.toString()!);
@@ -47,7 +47,7 @@ export default function Navigator() {
         <Tab.Navigator initialRouteName='User' screenOptions={{headerShown: false}}>
         <Tab.Screen name="Event" component={EventNavigator} />
         {
-          event !== undefined ? (
+          hasEvent ? (
             <>
               <Tab.Screen name="Product" component={ProductNavigator} />
               <Tab.Screen name="Order" component={OrderNavigator} />

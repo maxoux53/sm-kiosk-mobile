@@ -27,6 +27,10 @@ export default function Event() {
     })();
   }, []);
 
+  useEffect(() => {
+    Alert.alert('Event', event !== undefined ? event.name : 'No event');
+  }, [event]);
+
   return (
     <View style={styles.container}>
       {isLoading && <Loader />}
