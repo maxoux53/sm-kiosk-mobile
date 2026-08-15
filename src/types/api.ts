@@ -48,6 +48,7 @@ export interface OrderLine {
   purchase_id?: number;
   quantity: number;
   price?: number;
+  product?: Product;
 }
 
 export interface Purchase {
