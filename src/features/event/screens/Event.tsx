@@ -45,7 +45,7 @@ export default function Event() {
                   try {
                     await leaveEvent(event.id);
                   } catch {
-                    Alert.alert('Erreur', errorMessage ?? 'Impossible de quitter l\'évènement');
+                    Alert.alert(errorMessage ?? 'Impossible de quitter l\'évènement');
                   }
                 }}>
                 <Text style={styles.text2}>Quitter l'évènement</Text>

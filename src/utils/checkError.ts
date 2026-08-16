@@ -18,7 +18,7 @@ export const checkError = (e: Error): string => {
             case 404:
                 return "Ressource non trouvée !";
             case 409:
-                return "Conflit de données !";
+                return "Données déjà existantes !";
             case 422:
                 return "Données invalides !";
             case 500:

@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, Alert, Image } from 'react-native'
-import { Purchase } from '../types/api'
+import { OrderLine } from '../types/api'
 import { Vat } from '../types/api'
 import { useCallback, useMemo, useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import useVatAPI from '../hooks/useVatAPI';
 import Loader from './Loader';
 
-export default function Cart({ purchase }: { purchase: Purchase }) {
+export default function Cart({ orderLines }: { orderLines: Array<OrderLine> }) {
   const [vats, setVats] = useState<Array<Vat>>([]);
   const { getAllVats, isLoading, errorMessage } = useVatAPI();
 
@@ -27,8 +27,8 @@ export default function Cart({ purchase }: { purchase: Purchase }) {
     let vatAmountCalc = 0;
     let totalCalc = 0;
 
-    if (purchase && vats && vats.length > 0) {
-      purchase.order_line.forEach((orderLine) => {
+    if (orderLines && vats && vats.length > 0) {
+      orderLines.forEach((orderLine) => {
         const excl = (orderLine.price ?? orderLine.product?.excl_vat_price ?? 0) * orderLine.quantity;
         Alert.alert(orderLine.product?.category?.vat_type ?? 'Aucun type de TVA');
         const rate = vats.find(v => v.type === orderLine.product?.category?.vat_type)?.rate ?? 0;
@@ -40,15 +40,15 @@ export default function Cart({ purchase }: { purchase: Purchase }) {
     }
 
     return { subTotal: subTotalCalc, vatAmount: vatAmountCalc, total: totalCalc };
-  }, [purchase, vats]);
+  }, [orderLines, vats]);
 
   return (
     <>
       <View style={styles.view1}>
         {isLoading && <Loader/>}
         {
-          purchase.order_line.map((orderLine) => (
-            <View key={purchase.id + orderLine.product_id} style={styles.view3}>
+          orderLines?.map((orderLine) => (
+            <View key={orderLine.product_id} style={styles.view3}>
               <View>
                 <Image source={{uri: orderLine.product?.picture}} style={styles.image} />
               </View>
@@ -64,20 +64,24 @@ export default function Cart({ purchase }: { purchase: Purchase }) {
           ))
         }
       </View>
-      <View style={styles.view2}>
-        <View style={styles.view3}>
-          <Text>sous-total</Text>
-          <Text>{subTotal}€</Text>
+      {orderLines.length === 0 ? (
+        <Text>Aucune commande</Text>
+      ) : (
+        <View style={styles.view2}>
+          <View style={styles.view3}>
+            <Text>sous-total</Text>
+            <Text>{subTotal}€</Text>
+          </View>
+          <View style={styles.view3}>
+            <Text>Taxe</Text>
+            <Text>{vatAmount}€</Text>
+          </View>
+          <View style={styles.view3}>
+            <Text>Total</Text>
+            <Text>{total}€</Text>
+          </View>
         </View>
-        <View style={styles.view3}>
-          <Text>Taxe</Text>
-          <Text>{vatAmount}€</Text>
-        </View>
-        <View style={styles.view3}>
-          <Text>Total</Text>
-          <Text>{total}€</Text>
-        </View>
-      </View>
+      )}
     </>
   )
 }

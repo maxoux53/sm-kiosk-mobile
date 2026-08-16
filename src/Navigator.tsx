@@ -34,7 +34,7 @@ export default function Navigator() {
         dispatch(setEventId(event !== undefined ? event.id : undefined));
       } catch (error) {
         if (isAxiosError(error) && error.response?.status !== 404) {
-          Alert.alert(errorMessage ?? error.response?.statusText.toString()!);
+          Alert.alert(errorMessage ?? error.response?.statusText?.toString() ?? "Erreur inconnue");
         }
       }
     })();

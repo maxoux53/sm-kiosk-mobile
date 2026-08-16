@@ -15,7 +15,7 @@ export default function Account() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [user, setUser] = useState<User | undefined>();
-  const { getMyInfo, isLoading, errorMessage } = useMeAPI();
+  const { getMyInfo, deleteMyAccount, isLoading, errorMessage } = useMeAPI();
 
   useFocusEffect(
     useCallback(() => {
@@ -44,6 +44,23 @@ export default function Account() {
           dispatch(setUserId(undefined));
           dispatch(setEventId(undefined));
           token.clear();
+        }} />
+        <Button color="red" title="Supprimer mon compte" onPress={() => {
+          Alert.alert("Attention", "Cette action est irréversible", [
+            { text: "Annuler", style: "cancel" },
+            {
+              text: "Supprimer", onPress: async () => {
+                try {
+                  await deleteMyAccount();
+                  dispatch(setUserId(undefined));
+                  dispatch(setEventId(undefined));
+                  token.clear();
+                } catch {
+                  Alert.alert(errorMessage ?? "Erreur lors de la suppression")
+                }
+              },
+            },
+          ]);
         }} />
       </View>
     </View>

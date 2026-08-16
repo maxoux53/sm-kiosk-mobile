@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Alert, Image } from 'react-native';
 import { ImagePickerAsset } from 'expo-image-picker';
 import useAuthAPI from '../../../hooks/useAuthAPI';
-import { setUser } from '../../../store/slice';
+import { setUserId } from '../../../store/slice';
 import Loader from '../../../components/Loader';
 import { useDispatch } from 'react-redux';
 import useImageAPI from '../../../hooks/useImageAPI';
@@ -52,11 +52,11 @@ export default function Signup() {
 
     try {
       const user = { first_name: firstName, last_name: lastName, email, password };
-      await signup(user);
+      const response = await signup(user);
       if (avatar) {
         await uploadImage(avatar);
       }
-      dispatch(setUser(user));
+      dispatch(setUserId(response.user.id));
     } catch {
       Alert.alert(errorMessageSignup ?? errorMessageUpload ?? 'Erreur inconnue');
     }

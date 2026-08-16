@@ -5,9 +5,12 @@ import { exportStyles } from "../../../App";
 import { useRef } from 'react';
 import Loader from "../../../components/Loader";
 import useMeAPI from "../../../hooks/useMeAPI";
+import { useDispatch } from 'react-redux';
+import { setEventId } from "../../../store/slice";
 
 export default function Camera() {
   const navigator = useNavigation();
+  const dispatch = useDispatch();
   const isProcessingRef = useRef(false);
   const { joinEvent, isLoading, errorMessage } = useMeAPI();
 
@@ -24,6 +27,7 @@ export default function Camera() {
 
         try {
           await joinEvent(id);
+          dispatch(setEventId(id));
           navigator.goBack();
         } catch {
           Alert.alert(errorMessage ?? 'Erreur inconnue', undefined, [{ text: 'OK', onPress: () => { isProcessingRef.current = false; } }]);
