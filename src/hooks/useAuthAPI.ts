@@ -37,7 +37,10 @@ export default function useAuthAPI() {
         setErrorMessage(undefined);
         
         try {
-            const response = await authApi.signup(user);
+            // `POST /signup` ne renvoie que l'id : on enchaîne un login
+            // pour récupérer le JWT et ouvrir la session.
+            await authApi.signup(user);
+            const response = await authApi.login(user.email.trim().toLowerCase(), user.password);
             await token.write(response.token);
 
             return response;

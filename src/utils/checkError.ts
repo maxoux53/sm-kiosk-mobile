@@ -9,8 +9,13 @@ export const checkError = (e: Error): string => {
         }
 
         switch (status) {
-            case 400:
-                return "Requête invalide !";
+            case 400: {
+                const detail = typeof e.response?.data === "string"
+                    ? e.response.data
+                    : (e.response?.data as { message?: string })?.message;
+
+                return detail ? `Requête invalide : ${detail}` : "Requête invalide !";
+            }
             case 401:
                 return 'Accès interdit !';
             case 403:
@@ -28,5 +33,5 @@ export const checkError = (e: Error): string => {
         }
     }
 
-    return `Erreur inconnue ! ${typeof e}`;
+    return e?.message ? `Erreur : ${e.message}` : "Erreur inconnue !";
 }

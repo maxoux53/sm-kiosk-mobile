@@ -10,12 +10,15 @@ import { setUserId } from '../../../store/slice';
 import Loader from '../../../components/Loader';
 import { useDispatch } from 'react-redux';
 import useImageAPI from '../../../hooks/useImageAPI';
+import { checkError } from '../../../utils/checkError';
+
+const PASSWORD_MIN_LENGTH = 6;
 
 export default function Signup() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { signup, isLoading: isLoadingSignup, errorMessage: errorMessageSignup } = useAuthAPI()
-  const { uploadImage, isLoading: isLoadingUpload, errorMessage: errorMessageUpload } = useImageAPI()
+  const { signup, isLoading: isLoadingSignup } = useAuthAPI()
+  const { uploadImage, isLoading: isLoadingUpload } = useImageAPI()
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -45,26 +48,38 @@ export default function Signup() {
   };
 
   const handleSignup = async () => {
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !password) {
       Alert.alert('Veuillez remplir tous les champs.');
       return;
     }
 
+    if (password.length < PASSWORD_MIN_LENGTH) {
+      Alert.alert(`Le mot de passe doit contenir au moins ${PASSWORD_MIN_LENGTH} caractères.`);
+      return;
+    }
+
     try {
-      const user = { first_name: firstName, last_name: lastName, email, password };
-      const response = await signup(user);
+      // L'avatar doit être téléversé AVANT la création du compte pour
+      // pouvoir transmettre son identifiant dans la requête d'inscription.
+      const avatarId = avatar ? await uploadImage(avatar) : undefined;
+
+      const response = await signup({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        password,
+        avatar: avatarId,
+      });
+
       dispatch(setUserId(response.user.id));
-      if (avatar) {
-        await uploadImage(avatar);
-      }
-    } catch {
-      Alert.alert(errorMessageSignup ?? errorMessageUpload ?? 'Erreur inconnue');
+    } catch (e) {
+      Alert.alert(checkError(e as Error));
     }
   };
 
   return (
     <View style={styles.container}>
-      {isLoadingSignup || isLoadingUpload && <Loader />}
+      {(isLoadingSignup || isLoadingUpload) && <Loader />}
       <View style={styles.view1}>
         <Text style={{ fontSize: 32, fontFamily: 'bold'}}>S'enregistrer</Text>
         <View style={styles.view2}>

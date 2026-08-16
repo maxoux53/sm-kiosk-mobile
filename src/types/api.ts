@@ -14,6 +14,16 @@ export interface LoginResponse {
   };
 }
 
+/**
+ * Réponse de `POST /v1/signup` : le serveur ne renvoie que l'id créé.
+ */
+export interface CreatedUserResponse {
+  id: number;
+}
+
+/**
+ * Résultat exposé par le hook d'inscription (compte créé + session ouverte).
+ */
 export type SignUpResponse = LoginResponse;
 
 export interface User {
@@ -74,11 +84,21 @@ export interface Vat {
 }
 
 export interface ImageUploadUrl {
+  id: string;
   uploadURL: string;
 }
 
+/**
+ * Réponse du Direct Upload Cloudflare Images.
+ */
 export interface UploadImageResponse {
-  url: string;
+  success: boolean;
+  result: {
+    id: string;
+    filename?: string;
+    uploaded?: string;
+    variants?: string[];
+  };
 }
 
 export interface Pagination {

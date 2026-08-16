@@ -1,5 +1,5 @@
 import { apiClient } from "../client";
-import { LoginResponse, SignUpResponse, SignUpRequest } from "../../types/api";
+import { LoginResponse, CreatedUserResponse, SignUpRequest } from "../../types/api";
 import { AxiosError } from "axios";
 
 /**
@@ -20,15 +20,16 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 /**
  * @throws {AxiosError} Si la requête échoue.
  */
-export const signup = async (user: SignUpRequest): Promise<SignUpResponse> => {
-    const response = await apiClient.post<SignUpResponse>(
+export const signup = async (user: SignUpRequest): Promise<CreatedUserResponse> => {
+    const response = await apiClient.post<CreatedUserResponse>(
         "signup",
         {
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
+            first_name: user.first_name.trim(),
+            last_name: user.last_name.trim(),
+            email: user.email.trim().toLowerCase(),
             password: user.password,
-            avatar: user.avatar
+            // Le validateur refuse `null` : on omet la clé si absente.
+            ...(user.avatar ? { avatar: user.avatar } : {})
         }
     );
 

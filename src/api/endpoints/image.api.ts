@@ -26,13 +26,13 @@ export const uploadImage = async (imageFile: ImagePickerAsset, directUploadUrl: 
         type: mimeType,
     } as unknown as Blob);
 
+    // Ne pas définir "Content-Type" manuellement : le boundary multipart
+    // doit être généré automatiquement, sinon Cloudflare répond 400.
     const response = await axios.post<UploadImageResponse>(
         directUploadUrl,
         formData,
         {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
+            transformRequest: (data) => data
         }
     );
 
