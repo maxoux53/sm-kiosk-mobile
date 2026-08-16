@@ -17,7 +17,6 @@ export default function Account() {
       try {
         const purchases = await getMyPurchases();
         setPurchases(purchases);
-        Alert.alert("chargement", purchases[0].order_line[0].product?.excl_vat_price + "");
       } catch {
         Alert.alert(errorMessage ?? "Erreur inconnue");
         }
