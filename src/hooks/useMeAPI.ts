@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { checkError } from "../utils/checkError";
 import * as meApi from "../api/endpoints/me.api";
-import { User, Event, Purchase } from "../types/api";
+import { User, Event, Purchase, OrderLine } from "../types/api";
 
 export default function useMeAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -133,6 +133,24 @@ export default function useMeAPI() {
         }
     };
 
+    /**
+     * @throws {Error} Si la récupération échoue.
+     */
+    const createOrder = async (order: OrderLine[]): Promise<Purchase> => {
+        setIsLoading(true);
+        setErrorMessage(undefined);
+        
+        try {
+            return await meApi.createOrder(order);
+        } catch (e) {
+            const msgStaleClosure = checkError(e as Error);
+            setErrorMessage(msgStaleClosure);
+            throw e;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return {
         isLoading,
         errorMessage,
@@ -142,6 +160,7 @@ export default function useMeAPI() {
         getMyEvent,
         joinEvent,
         leaveEvent,
-        getMyPurchases
+        getMyPurchases,
+        createOrder
     };
 }

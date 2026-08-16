@@ -1,5 +1,5 @@
 import { apiClient, API_INTERACT_ROUTE } from "../client";
-import { User, Event, Purchase } from "../../types/api";
+import { User, Event, Purchase, OrderLine } from "../../types/api";
 import { AxiosError } from "axios";
 
 /**
@@ -75,6 +75,23 @@ export const leaveEvent = async (eventId: number): Promise<void> => {
 export const getMyPurchases = async (): Promise<Purchase[]> => {
     const response = await apiClient.get(
         `${API_INTERACT_ROUTE}me/purchases`
+    );
+
+    return response.data;
+};
+
+/**
+ * @throws {AxiosError} Si la requête échoue.
+ */
+export const createOrder = async (order: OrderLine[]): Promise<Purchase> => {
+    const response = await apiClient.post<Purchase>(
+        `${API_INTERACT_ROUTE}me/purchase`,
+        {
+            order_lines: order.map(({ product_id, quantity }) => ({
+                product_id,
+                quantity
+            }))
+        }
     );
 
     return response.data;

@@ -4,6 +4,7 @@ import { Product, OrderLine } from "../types/api";
 import { checkError } from "../utils/checkError";
 import useProductAPI from "./useProductAPI";
 import useVatAPI from "./useVatAPI";
+import useMeAPI from "./useMeAPI";
 
 export default function useCart() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -11,29 +12,37 @@ export default function useCart() {
 
     const { getProduct } = useProductAPI();
     const { getVat } = useVatAPI();
+    const { createOrder } = useMeAPI();
 
     const SM_ASTORAGE_CART_KEY = "@cart";
 
+    const readCart = async (): Promise<OrderLine[]> => {
+        const cart = await AsyncStorage.getItem(SM_ASTORAGE_CART_KEY);
+
+        if (!cart) {
+            return new Array<OrderLine>();
+        }
+
+        return JSON.parse(cart) as OrderLine[];
+    };
+
+    const writeCart = async (cart: OrderLine[]): Promise<void> => {
+        await AsyncStorage.setItem(SM_ASTORAGE_CART_KEY, JSON.stringify(cart));
+    };
+
     /**
-     * Retourne le prix TVA comprise d'un produit.
-     *
-     * Le taux est lu depuis la réponse produit (`category.vat.rate`) lorsqu'il est
-     * imbriqué. À défaut, il est récupéré via l'API TVA à partir de `vat_type`.
-     *
      * @throws {Error} Si la récupération du taux de TVA échoue.
      */
     const getPriceInclVat = async (product: Product): Promise<number> => {
         const exclVatPrice = Number(product.excl_vat_price);
 
-        // Taux déjà fourni par l'API produit : aucune requête supplémentaire.
-        const nestedRate = product.category?.vat?.rate;
-        if (nestedRate !== undefined && nestedRate !== null) {
-            return exclVatPrice * (1 + Number(nestedRate) / 100);
+        const vatRate = product.category?.vat?.rate;
+        if (vatRate !== undefined && vatRate !== null) {
+            return exclVatPrice * (1 + Number(vatRate) / 100);
         }
 
         const vatType = product.category?.vat_type;
 
-        // Sans type de TVA, une requête `vat/undefined` renverrait une erreur 400.
         if (!vatType) {
             return exclVatPrice;
         }
@@ -47,15 +56,9 @@ export default function useCart() {
      */
     const getCart = async (): Promise<OrderLine[]> => {
         setIsLoading(true);
-        
+
         try {
-            const cart = await AsyncStorage.getItem(SM_ASTORAGE_CART_KEY);
-
-            if (!cart) {
-                return new Array<OrderLine>();
-            }
-
-            return JSON.parse(cart) as OrderLine[];
+            return await readCart();
         } catch (e) {
             const msgStaleClosure = checkError(e as Error);
             setErrorMessage(msgStaleClosure);
@@ -70,9 +73,9 @@ export default function useCart() {
      */
     const setCart = async (cart: OrderLine[]): Promise<void> => {
         setIsLoading(true);
-        
+
         try {
-            await AsyncStorage.setItem(SM_ASTORAGE_CART_KEY, JSON.stringify(cart));
+            await writeCart(cart);
         } catch (e) {
             const msgStaleClosure = checkError(e as Error);
             setErrorMessage(msgStaleClosure);
@@ -157,12 +160,18 @@ export default function useCart() {
         setIsLoading(true);
 
         try {
-            const cart = await getCart();
+            const cart = await readCart();
             const existingOrderLineIndex = cart.findIndex((orderLine) => orderLine.product_id === product_id);
 
             if (existingOrderLineIndex !== -1) {
-                cart[existingOrderLineIndex].quantity = quantity;
-                await setCart(cart);
+                const orderLine = cart[existingOrderLineIndex];
+                orderLine.quantity = quantity;
+
+                if (orderLine.product) {
+                    orderLine.price = (await getPriceInclVat(orderLine.product)) * quantity;
+                }
+
+                await writeCart(cart);
             } else {
                 throw new Error("Product not found in cart");
             }
@@ -206,19 +215,12 @@ export default function useCart() {
     /**
      * @throws {Error} Si la mise à jour échoue.
      */
-    const invalidateAndRefreshCartPrices = async (): Promise<number> => {
+    const validateCartSendOrder = async (): Promise<void> => {
         setIsLoading(true);
 
         try {
-            const cart = await getCart();
-            let total = 0;
-
-            for (const orderLine of cart) {
-                orderLine.price = (await getPriceInclVat(await getProduct(orderLine.product_id))) * orderLine.quantity;
-                total += orderLine.price;
-            }
-
-            return total;
+            await createOrder(await readCart());
+            await writeCart(new Array<OrderLine>());
         } catch (e) {
             const msgStaleClosure = checkError(e as Error);
             setErrorMessage(msgStaleClosure);
@@ -238,6 +240,6 @@ export default function useCart() {
         removeFromCart,
         updateQuantity,
         totalPrice,
-        invalidateAndRefreshCartPrices
+        validateCart: validateCartSendOrder
     };
 }
