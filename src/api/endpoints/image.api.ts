@@ -17,11 +17,13 @@ export const fetchImgDirectUploadUrl = async (): Promise<ImageUploadUrl> => {
  */
 export const uploadImage = async (imageFile: ImagePickerAsset, directUploadUrl: string): Promise<UploadImageResponse> => {
     const formData = new FormData();
+    const fileName = imageFile.fileName ?? `avatar-${Date.now()}.jpg`;
+    const mimeType = imageFile.mimeType ?? "image/jpeg";
 
     formData.append("file", {
         uri: imageFile.uri,
-        name: imageFile.fileName,
-        type: imageFile.mimeType,
+        name: fileName,
+        type: mimeType,
     } as unknown as Blob);
 
     const response = await axios.post<UploadImageResponse>(
