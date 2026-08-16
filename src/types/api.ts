@@ -39,7 +39,11 @@ export interface Category {
   id: number;
   label: string;
   vat_type: string;
-  picture: string;
+  picture?: string;
+  /**
+   * Présent quand l'API imbrique la TVA de la catégorie (endpoints produit).
+   */
+  vat?: Vat;
 }
 
 export interface Product {
@@ -48,7 +52,7 @@ export interface Product {
   is_available: boolean;
   excl_vat_price: number;
   picture?: string;
-  category_id: number;
+  category_id?: number;
   event_id?: number;
   category?: Category;
 }

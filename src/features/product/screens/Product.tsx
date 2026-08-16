@@ -17,7 +17,7 @@ export default function Product() {
   const { getMyEvent, isLoading: isLoadingEvent, errorMessage: errorMessageEvent } = useMeAPI();
   const { getAllProductsByEvent, isLoading: isLoadingProducts, errorMessage: errorMessageProducts } = useProductAPI();
   const { getCategoriesByEvent, isLoading: isLoadingCategories, errorMessage: errorMessageCategories } = useCategoryAPI();
-  const { addToCart} = useCart();
+  const { addToCart, errorMessage: errorMessageCart } = useCart();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [categories, setCategories] = useState<Array<Category>>([]);
   const [products, setProducts] = useState<Array<ProductType>>([]);
@@ -60,13 +60,20 @@ export default function Product() {
               Alert.prompt("Veuillez entrer la quantité", undefined, [
                 {
                   text: "OK", onPress: async (value: string | undefined) => {
-                    if (value) {
-                      const quantity = parseInt(value);
-                      if (!quantity) {
-                        Alert.alert("La quantité doit être un nombre positif");
-                      } else {
-                        await addToCart(product.id, quantity);
-                      }
+                    if (!value) return;
+
+                    const quantity = parseInt(value, 10);
+
+                    if (!Number.isInteger(quantity) || quantity <= 0) {
+                      Alert.alert("La quantité doit être un nombre positif");
+                      return;
+                    }
+
+                    // Le callback d'Alert ne gère pas les rejets : on les capture ici.
+                    try {
+                      await addToCart(product.id, quantity);
+                    } catch {
+                      Alert.alert('Erreur', errorMessageCart ?? "Impossible d'ajouter au panier");
                     }
                   }
                 },

@@ -15,11 +15,31 @@ export default function useCart() {
     const SM_ASTORAGE_CART_KEY = "@cart";
 
     /**
+     * Retourne le prix TVA comprise d'un produit.
+     *
+     * Le taux est lu depuis la réponse produit (`category.vat.rate`) lorsqu'il est
+     * imbriqué. À défaut, il est récupéré via l'API TVA à partir de `vat_type`.
+     *
      * @throws {Error} Si la récupération du taux de TVA échoue.
      */
     const getPriceInclVat = async (product: Product): Promise<number> => {
-        const vat = await getVat(product.category?.vat_type!);
-        return product.excl_vat_price * (1 + vat.rate / 100);
+        const exclVatPrice = Number(product.excl_vat_price);
+
+        // Taux déjà fourni par l'API produit : aucune requête supplémentaire.
+        const nestedRate = product.category?.vat?.rate;
+        if (nestedRate !== undefined && nestedRate !== null) {
+            return exclVatPrice * (1 + Number(nestedRate) / 100);
+        }
+
+        const vatType = product.category?.vat_type;
+
+        // Sans type de TVA, une requête `vat/undefined` renverrait une erreur 400.
+        if (!vatType) {
+            return exclVatPrice;
+        }
+
+        const vat = await getVat(vatType);
+        return exclVatPrice * (1 + Number(vat.rate) / 100);
     };
 
     /**
