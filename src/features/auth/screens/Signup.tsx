@@ -11,8 +11,8 @@ import Loader from '../../../components/Loader';
 import { useDispatch } from 'react-redux';
 import useImageAPI from '../../../hooks/useImageAPI';
 import { checkError } from '../../../utils/checkError';
-
-const PASSWORD_MIN_LENGTH = 6;
+import { validateSignupForm } from '../../../utils/validateSignupForm';
+import { USER } from '../../../constants/constraints';
 
 export default function Signup() {
   const navigation = useNavigation();
@@ -48,13 +48,10 @@ export default function Signup() {
   };
 
   const handleSignup = async () => {
-    if (!firstName.trim() || !lastName.trim() || !email.trim() || !password) {
-      Alert.alert('Veuillez remplir tous les champs.');
-      return;
-    }
+    const validationError = validateSignupForm({ firstName, lastName, email, password });
 
-    if (password.length < PASSWORD_MIN_LENGTH) {
-      Alert.alert(`Le mot de passe doit contenir au moins ${PASSWORD_MIN_LENGTH} caractères.`);
+    if (validationError) {
+      Alert.alert(validationError);
       return;
     }
 
@@ -83,10 +80,10 @@ export default function Signup() {
       <View style={styles.view1}>
         <Text style={{ fontSize: 32, fontFamily: 'bold'}}>S'enregistrer</Text>
         <View style={styles.view2}>
-          <TextInput returnKeyType='next' autoCapitalize='none' autoCorrect={false} autoComplete='given-name' textContentType='givenName' style={exportStyles.input} placeholder='Prénom' value={firstName} onChangeText={setFirstName} />
-          <TextInput returnKeyType='next' autoCapitalize='none' autoCorrect={false} autoComplete='family-name' textContentType='familyName' style={exportStyles.input} placeholder='Nom' value={lastName} onChangeText={setLastName} />
-          <TextInput returnKeyType='next' keyboardType='email-address' autoCapitalize='none' autoCorrect={false} autoComplete='email' textContentType='emailAddress' style={exportStyles.input} placeholder='Email' value={email} onChangeText={setEmail} />
-          <TextInput returnKeyType='done' secureTextEntry autoCapitalize='none' autoCorrect={false} autoComplete='password' textContentType='password' style={exportStyles.input} placeholder='Mot de passe' value={password} onChangeText={setPassword} />
+          <TextInput maxLength={USER.FIRST_NAME_MAX} returnKeyType='next' autoCapitalize='words' autoCorrect={false} autoComplete='given-name' textContentType='givenName' style={exportStyles.input} placeholder='Prénom' value={firstName} onChangeText={setFirstName} />
+          <TextInput maxLength={USER.LAST_NAME_MAX} returnKeyType='next' autoCapitalize='words' autoCorrect={false} autoComplete='family-name' textContentType='familyName' style={exportStyles.input} placeholder='Nom' value={lastName} onChangeText={setLastName} />
+          <TextInput maxLength={USER.EMAIL_MAX} returnKeyType='next' keyboardType='email-address' autoCapitalize='none' autoCorrect={false} autoComplete='email' textContentType='emailAddress' style={exportStyles.input} placeholder='Email' value={email} onChangeText={setEmail} />
+          <TextInput maxLength={USER.PASSWORD_MAX} returnKeyType='done' secureTextEntry autoCapitalize='none' autoCorrect={false} autoComplete='password' textContentType='password' style={exportStyles.input} placeholder='Mot de passe' value={password} onChangeText={setPassword} />
           <TouchableOpacity onPress={pickImage} style={exportStyles.input}>
             {avatar ? (
               <Image source={{ uri: avatar.uri }} style={exportStyles.image} />

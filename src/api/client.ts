@@ -6,6 +6,12 @@ export const API_INTERACT_ROUTE = "interact/";
 
 export const apiClient: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
+    // Sans cet en-tête, `express.json()` ne parse pas le corps et le
+    // validateur reçoit un objet vide => 400 "Validation failure".
+    headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+    }
 });
 
 apiClient.interceptors.request.use(async (config) => {
