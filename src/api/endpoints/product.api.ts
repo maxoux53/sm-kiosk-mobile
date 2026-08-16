@@ -3,7 +3,7 @@ import { Product } from "../../types/api";
 import { AxiosError } from "axios";
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getProduct = async (id: number): Promise<Product> => {
     const response = await apiClient.get<Product>(
@@ -14,7 +14,7 @@ export const getProduct = async (id: number): Promise<Product> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getAllProductsByEvent = async (eventId: number): Promise<Product[]> => {
     const response = await apiClient.get<Product[]>(
@@ -25,7 +25,7 @@ export const getAllProductsByEvent = async (eventId: number): Promise<Product[]>
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const createProduct = async (product: Product): Promise<Product> => {
     const response = await apiClient.post<Product>(
@@ -37,7 +37,7 @@ export const createProduct = async (product: Product): Promise<Product> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const updateProduct = async (product: Product): Promise<Product> => {
     const response = await apiClient.patch<Product>(
@@ -49,7 +49,7 @@ export const updateProduct = async (product: Product): Promise<Product> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const deleteProduct = async (id: number): Promise<void> => {
     await apiClient.delete<void>(

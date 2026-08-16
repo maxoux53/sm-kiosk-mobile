@@ -6,7 +6,7 @@ export default function useVatAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getVat = async (type: string): Promise<Vat> => {
         setIsLoading(true);
@@ -19,7 +19,7 @@ export default function useVatAPI() {
     };
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getAllVats = async (): Promise<Vat[]> => {
         setIsLoading(true);

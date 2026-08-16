@@ -6,7 +6,7 @@ export default function useCategoryAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getCategoriesByEvent = async (eventId: number): Promise<Category[]> => {
         setIsLoading(true);

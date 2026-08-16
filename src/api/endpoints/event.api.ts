@@ -3,7 +3,7 @@ import { Event } from "../../types/api";
 import { AxiosError } from "axios";
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getEvent = async (id: number): Promise<Event> => {
     const response = await apiClient.get<Event>(

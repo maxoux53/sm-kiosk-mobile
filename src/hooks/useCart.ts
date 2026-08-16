@@ -29,7 +29,7 @@ export default function useCart() {
     };
 
     /**
-     * @throws {Error} Si la récupération du taux de TVA échoue.
+     * @throws {Error}
      */
     const getPriceInclVat = async (product: Product): Promise<number> => {
         const exclVatPrice = Number(product.excl_vat_price);
@@ -50,7 +50,7 @@ export default function useCart() {
     };
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getCart = async (): Promise<OrderLine[]> => {
         setIsLoading(true);
@@ -63,7 +63,7 @@ export default function useCart() {
     };
 
     /**
-     * @throws {Error} Si la sauvegarde échoue.
+     * @throws {Error}
      */
     const setCart = async (cart: OrderLine[]): Promise<void> => {
         setIsLoading(true);
@@ -76,14 +76,14 @@ export default function useCart() {
     };
 
     /**
-     * @throws {Error} Si la suppression échoue.
+     * @throws {Error}
      */
     const clearCart = async (): Promise<void> => {
         return setCart(new Array<OrderLine>());
     }
 
     /**
-     * @throws {Error} Si l'ajout au panier échoue.
+     * @throws {Error}
      */
     const addToCart = async (product_id: number, quantity: number): Promise<void> => {
         setIsLoading(true);
@@ -112,7 +112,7 @@ export default function useCart() {
     };
 
     /**
-     * @throws {Error} Si la suppression échoue.
+     * @throws {Error}
      */
     const removeFromCart = async (product_id: number): Promise<void> => {
         setIsLoading(true);
@@ -127,7 +127,7 @@ export default function useCart() {
     };
 
     /**
-     * @throws {Error} Si la mise à jour échoue.
+     * @throws {Error}
      */
     const updateQuantity = async (product_id: number, quantity: number): Promise<void> => {
         if (quantity < 0) {
@@ -163,7 +163,7 @@ export default function useCart() {
     };
 
     /**
-     * @throws {Error} Si le calcul échoue.
+     * @throws {Error}
      */
     const totalPrice = async (): Promise<number> => {
         setIsLoading(true);
@@ -187,7 +187,7 @@ export default function useCart() {
     };
 
     /**
-     * @throws {Error} Si la mise à jour échoue.
+     * @throws {Error}
      */
     const validateCartSendOrder = async (): Promise<void> => {
         setIsLoading(true);

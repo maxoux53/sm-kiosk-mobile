@@ -6,7 +6,7 @@ export default function useProductAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getProduct = async (id: number): Promise<Product> => {
         setIsLoading(true);
@@ -19,7 +19,7 @@ export default function useProductAPI() {
     };
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getAllProductsByEvent = async (eventId: number): Promise<Product[]> => {
         setIsLoading(true);
@@ -32,7 +32,7 @@ export default function useProductAPI() {
     };
 
     /**
-     * @throws {Error} Si la création échoue.
+     * @throws {Error}
      */
     const createProduct = async (product: Product): Promise<Product> => {
         setIsLoading(true);
@@ -45,7 +45,7 @@ export default function useProductAPI() {
     };
 
     /**
-     * @throws {Error} Si la mise à jour échoue.
+     * @throws {Error}
      */
     const updateProduct = async (product: Product): Promise<Product> => {
         setIsLoading(true);
@@ -58,7 +58,7 @@ export default function useProductAPI() {
     };
 
     /**
-     * @throws {Error} Si la suppression échoue.
+     * @throws {Error}
      */
     const deleteProduct = async (id: number): Promise<void> => {
         setIsLoading(true);

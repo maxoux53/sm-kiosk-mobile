@@ -6,7 +6,7 @@ export default function useMeAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getMyInfo = async (): Promise<User> => {
         setIsLoading(true);
@@ -19,7 +19,7 @@ export default function useMeAPI() {
     };
 
     /**
-     * @throws {Error} Si la mise à jour échoue.
+     * @throws {Error}
      */
     const updateMyInfo = async (user: User): Promise<User> => {
         setIsLoading(true);
@@ -32,7 +32,7 @@ export default function useMeAPI() {
     };
 
     /**
-     * @throws {Error} Si la suppression échoue.
+     * @throws {Error}
      */
     const deleteMyAccount = async (): Promise<void> => {
         setIsLoading(true);
@@ -45,7 +45,7 @@ export default function useMeAPI() {
     };
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getMyEvent = async (): Promise<Event> => {
         setIsLoading(true);
@@ -58,7 +58,7 @@ export default function useMeAPI() {
     };
 
     /**
-     * @throws {Error} Si la requête échoue.
+     * @throws {Error}
      */
     const joinEvent = async (eventId: number): Promise<{id: number}> => {
         setIsLoading(true);
@@ -71,7 +71,7 @@ export default function useMeAPI() {
     };
 
     /**
-     * @throws {Error} Si la requête échoue.
+     * @throws {Error}
      */
     const leaveEvent = async (eventId: number): Promise<void> => {
         setIsLoading(true);
@@ -84,7 +84,7 @@ export default function useMeAPI() {
     };
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getMyPurchases = async (): Promise<Purchase[]> => {
         setIsLoading(true);
@@ -97,7 +97,7 @@ export default function useMeAPI() {
     };
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const createOrder = async (order: OrderLine[]): Promise<void> => {
         setIsLoading(true);

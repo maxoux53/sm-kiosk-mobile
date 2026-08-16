@@ -3,7 +3,7 @@ import { Vat, PaginatedResponse } from "../../types/api";
 import { AxiosError } from "axios";
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getVat = async (type: string): Promise<Vat> => {
     const response = await apiClient.get<Vat>(
@@ -14,7 +14,7 @@ export const getVat = async (type: string): Promise<Vat> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getAllVats = async (): Promise<Vat[]> => {
     const response = await apiClient.get<PaginatedResponse<Vat>>(

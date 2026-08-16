@@ -6,7 +6,7 @@ export default function useEventAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /**
-     * @throws {Error} Si la récupération échoue.
+     * @throws {Error}
      */
     const getEvent = async (id: number): Promise<Event> => {
         setIsLoading(true);

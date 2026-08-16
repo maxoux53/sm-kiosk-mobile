@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import { ImageUploadUrl, UploadImageResponse } from "../../types/api";
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const fetchImgDirectUploadUrl = async (): Promise<ImageUploadUrl> => {
     return (await apiClient.get<ImageUploadUrl>(
@@ -13,7 +13,7 @@ export const fetchImgDirectUploadUrl = async (): Promise<ImageUploadUrl> => {
 };
 
 /**
- * @throws {AxiosError} Si le téléversement échoue.
+ * @throws {AxiosError}
  */
 export const uploadImage = async (imageFile: ImagePickerAsset, directUploadUrl: string): Promise<UploadImageResponse> => {
     const formData = new FormData();
@@ -26,8 +26,6 @@ export const uploadImage = async (imageFile: ImagePickerAsset, directUploadUrl: 
         type: mimeType,
     } as unknown as Blob);
 
-    // Ne pas définir "Content-Type" manuellement : le boundary multipart
-    // doit être généré automatiquement, sinon Cloudflare répond 400.
     const response = await axios.post<UploadImageResponse>(
         directUploadUrl,
         formData,
