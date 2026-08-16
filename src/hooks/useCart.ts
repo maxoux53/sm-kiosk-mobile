@@ -1,14 +1,12 @@
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Product, OrderLine } from "../types/api";
-import { checkError } from "../utils/checkError";
 import useProductAPI from "./useProductAPI";
 import useVatAPI from "./useVatAPI";
 import useMeAPI from "./useMeAPI";
 
 export default function useCart() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>();
 
     const { getProduct } = useProductAPI();
     const { getVat } = useVatAPI();
@@ -59,10 +57,6 @@ export default function useCart() {
 
         try {
             return await readCart();
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -76,10 +70,6 @@ export default function useCart() {
 
         try {
             await writeCart(cart);
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -97,7 +87,7 @@ export default function useCart() {
      */
     const addToCart = async (product_id: number, quantity: number): Promise<void> => {
         setIsLoading(true);
-        
+
         try {
             const product = await getProduct(product_id);
             const cart = await getCart();
@@ -116,10 +106,6 @@ export default function useCart() {
                 });
             }
             await setCart(cart);
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -130,15 +116,11 @@ export default function useCart() {
      */
     const removeFromCart = async (product_id: number): Promise<void> => {
         setIsLoading(true);
-        
+
         try {
             const cart = await getCart();
             const updatedCart = cart.filter((orderLine) => orderLine.product_id !== product_id);
             await setCart(updatedCart);
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -163,22 +145,18 @@ export default function useCart() {
             const cart = await readCart();
             const existingOrderLineIndex = cart.findIndex((orderLine) => orderLine.product_id === product_id);
 
-            if (existingOrderLineIndex !== -1) {
-                const orderLine = cart[existingOrderLineIndex];
-                orderLine.quantity = quantity;
-
-                if (orderLine.product) {
-                    orderLine.price = (await getPriceInclVat(orderLine.product)) * quantity;
-                }
-
-                await writeCart(cart);
-            } else {
+            if (existingOrderLineIndex === -1) {
                 throw new Error("Product not found in cart");
             }
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
+
+            const orderLine = cart[existingOrderLineIndex];
+            orderLine.quantity = quantity;
+
+            if (orderLine.product) {
+                orderLine.price = (await getPriceInclVat(orderLine.product)) * quantity;
+            }
+
+            await writeCart(cart);
         } finally {
             setIsLoading(false);
         }
@@ -203,10 +181,6 @@ export default function useCart() {
             }
 
             return total;
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -221,10 +195,6 @@ export default function useCart() {
         try {
             await createOrder(await readCart());
             await writeCart(new Array<OrderLine>());
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -232,7 +202,6 @@ export default function useCart() {
 
     return {
         isLoading,
-        errorMessage,
         getCart,
         setCart,
         clearCart,

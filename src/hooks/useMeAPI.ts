@@ -1,25 +1,18 @@
 import { useState } from "react";
-import { checkError } from "../utils/checkError";
 import * as meApi from "../api/endpoints/me.api";
 import { User, Event, Purchase, OrderLine } from "../types/api";
 
 export default function useMeAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>();
 
     /**
      * @throws {Error} Si la récupération échoue.
      */
     const getMyInfo = async (): Promise<User> => {
         setIsLoading(true);
-        setErrorMessage(undefined);
-        
+
         try {
             return await meApi.getMyInfo();
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -30,14 +23,9 @@ export default function useMeAPI() {
      */
     const updateMyInfo = async (user: User): Promise<User> => {
         setIsLoading(true);
-        setErrorMessage(undefined);
-        
+
         try {
             return await meApi.updateMyInfo(user);
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -48,14 +36,9 @@ export default function useMeAPI() {
      */
     const deleteMyAccount = async (): Promise<void> => {
         setIsLoading(true);
-        setErrorMessage(undefined);
-        
+
         try {
             return await meApi.deleteMyAccount();
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -66,14 +49,9 @@ export default function useMeAPI() {
      */
     const getMyEvent = async (): Promise<Event> => {
         setIsLoading(true);
-        setErrorMessage(undefined);
-        
+
         try {
             return await meApi.getMyEvent();
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -84,14 +62,9 @@ export default function useMeAPI() {
      */
     const joinEvent = async (eventId: number): Promise<{id: number}> => {
         setIsLoading(true);
-        setErrorMessage(undefined);
-        
+
         try {
             return await meApi.joinEvent(eventId);
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -102,14 +75,9 @@ export default function useMeAPI() {
      */
     const leaveEvent = async (eventId: number): Promise<void> => {
         setIsLoading(true);
-        setErrorMessage(undefined);
-        
+
         try {
             return await meApi.leaveEvent(eventId);
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -120,14 +88,9 @@ export default function useMeAPI() {
      */
     const getMyPurchases = async (): Promise<Purchase[]> => {
         setIsLoading(true);
-        setErrorMessage(undefined);
-        
+
         try {
             return await meApi.getMyPurchases();
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -138,14 +101,9 @@ export default function useMeAPI() {
      */
     const createOrder = async (order: OrderLine[]): Promise<void> => {
         setIsLoading(true);
-        setErrorMessage(undefined);
-        
+
         try {
             return await meApi.createOrder(order);
-        } catch (e) {
-            const msgStaleClosure = checkError(e as Error);
-            setErrorMessage(msgStaleClosure);
-            throw e;
         } finally {
             setIsLoading(false);
         }
@@ -153,7 +111,6 @@ export default function useMeAPI() {
 
     return {
         isLoading,
-        errorMessage,
         getMyInfo,
         updateMyInfo,
         deleteMyAccount,
