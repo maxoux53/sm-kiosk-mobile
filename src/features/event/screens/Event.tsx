@@ -8,10 +8,11 @@ import { Alert, Image } from 'react-native';
 import useMeAPI from '../../../hooks/useMeAPI';
 import { Event as EventType } from '../../../types/api';
 import { isAxiosError } from 'axios';
+import { checkError } from '../../../utils/checkError';
 
 export default function Event() {
   const navigator = useNavigation();
-  const { leaveEvent, getMyEvent, isLoading, errorMessage } = useMeAPI();
+  const { leaveEvent, getMyEvent, isLoading } = useMeAPI();
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [event, setEvent] = useState<EventType>();
 
@@ -22,9 +23,12 @@ export default function Event() {
             const result = await getMyEvent();
             setEvent(result);
           } catch (error) {
-            if (isAxiosError(error) && error.response?.status !== 404) {
-              Alert.alert(errorMessage ?? error.response?.statusText.toString()!);
+            // 404 => l'utilisateur ne participe à aucun évènement : cas normal.
+            if (isAxiosError(error) && error.response?.status === 404) {
+              setEvent(undefined);
+              return;
             }
+            Alert.alert(checkError(error as Error));
           }
         })();
       }, [])
@@ -41,11 +45,18 @@ export default function Event() {
               <Image source={{ uri: event.image }} style={exportStyles.image} />
               <TouchableOpacity
                 style={exportStyles.button}
+                disabled={isLoading}
                 onPress={async () => {
                   try {
                     await leaveEvent(event.id);
-                  } catch {
-                    Alert.alert(errorMessage ?? 'Impossible de quitter l\'évènement');
+                    setEvent(undefined);
+                  } catch (error) {
+                    // 404 => le membership n'existe déjà plus : l'objectif est atteint.
+                    if (isAxiosError(error) && error.response?.status === 404) {
+                      setEvent(undefined);
+                      return;
+                    }
+                    Alert.alert(checkError(error as Error));
                   }
                 }}>
                 <Text style={styles.text2}>Quitter l'évènement</Text>
