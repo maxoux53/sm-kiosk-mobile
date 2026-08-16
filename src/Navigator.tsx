@@ -61,7 +61,7 @@ export default function Navigator() {
       {userId !== undefined ? (
         <Tab.Navigator initialRouteName='Utilisateur' screenOptions={{headerShown: false}}>
           <Tab.Screen name="Événement" component={EventNavigator} options={{tabBarIcon: ({color}) => <Calendar color={color}/>}}/>
-        {eventId !== undefined && <Tab.Screen name="Produit" component={ProductNavigator} options={{tabBarIcon: ({color}) => <Box color={color}/>}}/>}
+        {eventId !== undefined && <Tab.Screen name="Produits" component={ProductNavigator} options={{tabBarIcon: ({color}) => <Box color={color}/>}}/>}
         {eventId !== undefined && <Tab.Screen name="Commande" component={OrderNavigator} options={{tabBarIcon: ({color}) => <ShoppingCart color={color}/>}}/>}
         <Tab.Screen name="Utilisateur" component={UserNavigator} options={{tabBarIcon: ({color}) => <User color={color}/>}}/>
         </Tab.Navigator>

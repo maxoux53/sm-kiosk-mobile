@@ -39,6 +39,29 @@ export default function Product() {
     }, [eventId])
   );
 
+  const addProduct = async (productId: number) => {
+    Alert.prompt("Veuillez entrer la quantité", undefined, [
+      {
+        text: "OK", onPress: async (value: string | undefined) => {
+          if (!value) return;
+
+          const quantity = parseInt(value, 10);
+
+          if (!Number.isInteger(quantity) || quantity <= 0) {
+            Alert.alert("La quantité doit être un nombre positif");
+            return;
+          }
+
+          try {
+            await addToCart(productId, quantity);
+          } catch {
+            Alert.alert('Erreur', errorMessageCart ?? "Impossible d'ajouter au panier");
+          }
+        }
+      },
+    ])
+  }
+
   return (
     <View style={styles.container}>
       {isLoadingEvent || isLoadingCategories || isLoadingProducts && <Loader />}
@@ -56,29 +79,7 @@ export default function Product() {
         {products.map((product) => {
           if (product.category?.id !== categories[selectedIndex]?.id) return null;
           return (
-            <TouchableOpacity key={product.id} onPress={() => {
-              Alert.prompt("Veuillez entrer la quantité", undefined, [
-                {
-                  text: "OK", onPress: async (value: string | undefined) => {
-                    if (!value) return;
-
-                    const quantity = parseInt(value, 10);
-
-                    if (!Number.isInteger(quantity) || quantity <= 0) {
-                      Alert.alert("La quantité doit être un nombre positif");
-                      return;
-                    }
-
-                    // Le callback d'Alert ne gère pas les rejets : on les capture ici.
-                    try {
-                      await addToCart(product.id, quantity);
-                    } catch {
-                      Alert.alert('Erreur', errorMessageCart ?? "Impossible d'ajouter au panier");
-                    }
-                  }
-                },
-              ])
-            }} style={styles.button}>
+            <TouchableOpacity key={product.id} onPress={() => addProduct(product.id)} style={styles.button}>
               <Image source={{ uri: product.picture }} style={styles.image} />
               <Text style={styles.text2}>{product.label}</Text>
               <Text style={styles.text3}>{product.excl_vat_price}€</Text>

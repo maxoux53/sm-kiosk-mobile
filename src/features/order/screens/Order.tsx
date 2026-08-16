@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import Cart from '../../../components/Cart';
@@ -7,9 +7,11 @@ import Loader from '../../../components/Loader';
 import useCart from '../../../hooks/useCart';
 import { exportStyles } from '../../../App';
 import useMeAPI from '../../../hooks/useMeAPI';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Order() {
-  const { getCart } = useCart();
+  const navigation = useNavigation();
+  const { getCart, clearCart } = useCart();
   const {  } = useMeAPI();
   const [orderLines, setOrderLines] = useState<Array<OrderLine>>([]);
 
@@ -27,9 +29,15 @@ export default function Order() {
       <Text style={styles.text1}>Commandes</Text>
       <View style={styles.view1}>
         <Cart orderLines={orderLines} />
-        <TouchableOpacity style={exportStyles.button}>
-          <Text style={styles.text2}>Valider</Text>
-        </TouchableOpacity>
+        <View style={styles.view2}>
+          <TouchableOpacity style={exportStyles.button} disabled={orderLines.length === 0}>
+            <Text style={styles.text2}>Valider</Text>
+          </TouchableOpacity>
+          {orderLines.length > 0 && <Button title="Vider le panier" color="red" onPress={async () => {
+            await clearCart();
+            navigation.navigate('Produits');
+          }} />}
+        </View>
       </View>
     </View>
   )
@@ -64,5 +72,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  view2: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
   },
 })
