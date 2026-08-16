@@ -53,10 +53,10 @@ export default function Signup() {
     try {
       const user = { first_name: firstName, last_name: lastName, email, password };
       const response = await signup(user);
+      dispatch(setUserId(response.user.id));
       if (avatar) {
         await uploadImage(avatar);
       }
-      dispatch(setUserId(response.user.id));
     } catch {
       Alert.alert(errorMessageSignup ?? errorMessageUpload ?? 'Erreur inconnue');
     }

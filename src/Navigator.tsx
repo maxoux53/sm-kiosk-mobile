@@ -30,15 +30,29 @@ export default function Navigator() {
       try {
         const user = await getMyInfo();
         dispatch(setUserId(user.id));
-        const event = await getMyEvent();
-        dispatch(setEventId(event !== undefined ? event.id : undefined));
       } catch (error) {
         if (isAxiosError(error) && error.response?.status !== 404) {
           Alert.alert(errorMessage ?? error.response?.statusText?.toString() ?? "Erreur inconnue");
         }
       }
     })();
-  }, [eventId, userId]);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (userId === undefined) return;
+      try {
+        if (eventId === undefined) {
+          const event = await getMyEvent();
+          dispatch(setEventId(event !== undefined ? event.id : undefined));
+        }
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status !== 404) {
+          Alert.alert(errorMessage ?? error.response?.statusText?.toString() ?? "Erreur inconnue");
+        }
+      }
+    })();
+  }, [userId])
 
   return (
     <NavigationContainer >
