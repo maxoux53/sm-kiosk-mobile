@@ -6,9 +6,7 @@ export default function useImageAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /**
-     * Téléverse une image et retourne son identifiant Cloudflare.
-     *
-     * @throws {Error} Si le téléversement échoue.
+     * @throws {Error}
      */
     const uploadImage = async (imageFile: ImagePickerAsset): Promise<string> => {
         setIsLoading(true);

@@ -3,7 +3,7 @@ import { Category } from "../../types/api";
 import { AxiosError } from "axios";
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getCategoriesByEvent = async (eventId: number): Promise<Category[]> => {
     const response = await apiClient.get<Category[]>(

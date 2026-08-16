@@ -3,7 +3,7 @@ import { User, Event, Purchase, OrderLine } from "../../types/api";
 import { AxiosError } from "axios";
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getMyInfo = async (): Promise<User> => {
     const response = await apiClient.get<User>(
@@ -14,7 +14,7 @@ export const getMyInfo = async (): Promise<User> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const updateMyInfo = async (user: User): Promise<User> => {
     const response = await apiClient.patch<User>(
@@ -26,7 +26,7 @@ export const updateMyInfo = async (user: User): Promise<User> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const deleteMyAccount = async (): Promise<void> => {
     await apiClient.delete<void>(
@@ -37,7 +37,7 @@ export const deleteMyAccount = async (): Promise<void> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getMyEvent = async (): Promise<Event> => {
     const response = await apiClient.get<Event>(
@@ -48,7 +48,7 @@ export const getMyEvent = async (): Promise<Event> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const joinEvent = async (eventId: number): Promise<{id: number}> => {
     const response = await apiClient.post<{id: number}>(
@@ -59,7 +59,7 @@ export const joinEvent = async (eventId: number): Promise<{id: number}> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const leaveEvent = async (eventId: number): Promise<void> => {
     await apiClient.delete<void>(
@@ -70,7 +70,7 @@ export const leaveEvent = async (eventId: number): Promise<void> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const getMyPurchases = async (): Promise<Purchase[]> => {
     const response = await apiClient.get(
@@ -81,7 +81,7 @@ export const getMyPurchases = async (): Promise<Purchase[]> => {
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const createOrder = async (order: OrderLine[]): Promise<void> => {
     const response = await apiClient.post<void>(

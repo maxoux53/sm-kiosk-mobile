@@ -7,7 +7,7 @@ export default function useAuthAPI() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /**
-     * @throws {Error} Si la connexion échoue.
+     * @throws {Error}
      */
     const login = async (email: string, password: string): Promise<LoginResponse> => {
         setIsLoading(true);
@@ -23,14 +23,12 @@ export default function useAuthAPI() {
     };
 
     /**
-     * @throws {Error} Si l'inscription échoue.
+     * @throws {Error}
      */
     const signup = async (user: SignUpRequest): Promise<SignUpResponse> => {
         setIsLoading(true);
 
         try {
-            // `POST /signup` ne renvoie que l'id : on enchaîne un login
-            // pour récupérer le JWT et ouvrir la session.
             await authApi.signup(user);
             const response = await authApi.login(user.email.trim().toLowerCase(), user.password);
             await token.write(response.token);

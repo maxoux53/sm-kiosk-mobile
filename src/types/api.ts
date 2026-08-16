@@ -92,9 +92,6 @@ export interface ImageUploadUrl {
   uploadURL: string;
 }
 
-/**
- * Réponse du Direct Upload Cloudflare Images.
- */
 export interface UploadImageResponse {
   success: boolean;
   result: {

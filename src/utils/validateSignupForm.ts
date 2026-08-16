@@ -7,12 +7,6 @@ interface SignupFormValues {
     password: string;
 }
 
-/**
- * Valide le formulaire d'inscription selon les mêmes règles que l'API,
- * afin d'éviter un `400 Validation failure` peu explicite.
- *
- * @returns Le message d'erreur à afficher, ou `undefined` si tout est valide.
- */
 export const validateSignupForm = ({
     firstName,
     lastName,

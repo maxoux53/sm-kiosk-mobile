@@ -3,7 +3,7 @@ import { LoginResponse, CreatedUserResponse, SignUpRequest } from "../../types/a
 import { AxiosError } from "axios";
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
     const response = await apiClient.post<LoginResponse>(
@@ -18,7 +18,7 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 };
 
 /**
- * @throws {AxiosError} Si la requête échoue.
+ * @throws {AxiosError}
  */
 export const signup = async (user: SignUpRequest): Promise<CreatedUserResponse> => {
     const response = await apiClient.post<CreatedUserResponse>(
