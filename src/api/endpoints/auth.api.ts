@@ -28,7 +28,6 @@ export const signup = async (user: SignUpRequest): Promise<CreatedUserResponse> 
             last_name: user.last_name.trim(),
             email: user.email.trim().toLowerCase(),
             password: user.password,
-            // Le validateur refuse `null` : on omet la clé si absente.
             ...(user.avatar ? { avatar: user.avatar } : {})
         }
     );

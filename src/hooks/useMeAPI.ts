@@ -136,7 +136,7 @@ export default function useMeAPI() {
     /**
      * @throws {Error} Si la récupération échoue.
      */
-    const createOrder = async (order: OrderLine[]): Promise<Purchase> => {
+    const createOrder = async (order: OrderLine[]): Promise<void> => {
         setIsLoading(true);
         setErrorMessage(undefined);
         

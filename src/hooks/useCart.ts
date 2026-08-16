@@ -240,6 +240,6 @@ export default function useCart() {
         removeFromCart,
         updateQuantity,
         totalPrice,
-        validateCart: validateCartSendOrder
+        validateCartSendOrder
     };
 }

@@ -83,8 +83,8 @@ export const getMyPurchases = async (): Promise<Purchase[]> => {
 /**
  * @throws {AxiosError} Si la requête échoue.
  */
-export const createOrder = async (order: OrderLine[]): Promise<Purchase> => {
-    const response = await apiClient.post<Purchase>(
+export const createOrder = async (order: OrderLine[]): Promise<void> => {
+    const response = await apiClient.post<void>(
         `${API_INTERACT_ROUTE}me/purchase`,
         {
             order_lines: order.map(({ product_id, quantity }) => ({
@@ -94,5 +94,5 @@ export const createOrder = async (order: OrderLine[]): Promise<Purchase> => {
         }
     );
 
-    return response.data;
+    return;
 };
