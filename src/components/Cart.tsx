@@ -29,21 +29,24 @@ export default function Cart({ orderLines }: { orderLines: Array<OrderLine> }) {
 
     if (orderLines && vats && vats.length > 0) {
       orderLines.forEach((orderLine) => {
-        const excl = (orderLine.price ?? orderLine.product?.excl_vat_price ?? 0) * orderLine.quantity;
-        Alert.alert(orderLine.product?.category?.vat_type ?? 'Aucun type de TVA');
+        const excl = (orderLine.product?.excl_vat_price ?? 0) * orderLine.quantity;
         const rate = vats.find(v => v.type === orderLine.product?.category?.vat_type)?.rate ?? 0;
-        const vat = excl * (rate / 100);
+        const vat = Math.round((excl * (rate / 100)) * 100) / 100;
         subTotalCalc += excl;
         vatAmountCalc += vat;
         totalCalc += excl + vat;
       });
     }
 
-    return { subTotal: subTotalCalc, vatAmount: vatAmountCalc, total: totalCalc };
+    return {
+      subTotal: Math.round(subTotalCalc * 100) / 100,
+      vatAmount: Math.round(vatAmountCalc * 100) / 100,
+      total: Math.round(totalCalc * 100) / 100
+    };
   }, [orderLines, vats]);
 
   return (
-    <>
+    <View style={styles.view2}>
       <View style={styles.view1}>
         {isLoading && <Loader/>}
         {
@@ -58,7 +61,7 @@ export default function Cart({ orderLines }: { orderLines: Array<OrderLine> }) {
                 <Text>Quantité : {orderLine.quantity}</Text>
               </View>
               <View>
-                <Text>{orderLine.price}€</Text>
+                <Text>{orderLine.product?.excl_vat_price}€</Text>
               </View>
             </View>
           ))
@@ -82,7 +85,7 @@ export default function Cart({ orderLines }: { orderLines: Array<OrderLine> }) {
           </View>
         </View>
       )}
-    </>
+    </View>
   )
 }
 
@@ -90,9 +93,9 @@ const styles = StyleSheet.create({
   view1: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: 16,
   },
   view2: {

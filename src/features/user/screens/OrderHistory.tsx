@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
 import useMeAPI from '../../../hooks/useMeAPI';
@@ -8,7 +8,6 @@ import Loader from '../../../components/Loader';
 import Cart from '../../../components/Cart';
 
 export default function Account() {
-  const navigation = useNavigation();
   const { getMyPurchases, isLoading, errorMessage } = useMeAPI();
   const [purchases, setPurchases] = useState<Array<Purchase>>([]);
 
@@ -18,6 +17,7 @@ export default function Account() {
       try {
         const purchases = await getMyPurchases();
         setPurchases(purchases);
+        Alert.alert("chargement", purchases[0].order_line[0].product?.excl_vat_price + "");
       } catch {
         Alert.alert(errorMessage ?? "Erreur inconnue");
         }
@@ -36,7 +36,7 @@ export default function Account() {
           <View style={styles.view2}>
             {
               purchases.map((purchase, index) => (
-                <Cart key={index} purchase={purchase} />
+                <Cart key={index} orderLines={purchase.order_line} />
               ))
             }
           </View>
@@ -49,13 +49,14 @@ export default function Account() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: '15%',
-    backgroundColor: 'white',
+    paddingTop: '15%',
     display: 'flex',
     alignItems: 'center',
+    gap: 16,
+    backgroundColor: 'white',
   },
   view1: {
-    width: '100%',
+    width: '80%',
     display: 'flex',
     flexDirection: 'column',
     gap: 32,

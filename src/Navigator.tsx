@@ -15,6 +15,7 @@ import { setUserId, setEventId } from './store/slice';
 import Loader from './components/Loader';
 import { token } from './api/secureStore';
 import { AxiosError, isAxiosError } from 'axios';
+import { Calendar, Box, ShoppingCart, User } from 'lucide-react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -58,11 +59,11 @@ export default function Navigator() {
     <NavigationContainer >
       {isLoading && <Loader/>}
       {userId !== undefined ? (
-        <Tab.Navigator initialRouteName='User' screenOptions={{headerShown: false}}>
-        <Tab.Screen name="Event" component={EventNavigator} />
-        {eventId !== undefined && <Tab.Screen name="Product" component={ProductNavigator} />}
-        {eventId !== undefined && <Tab.Screen name="Order" component={OrderNavigator} />}
-        <Tab.Screen name="User" component={UserNavigator} />
+        <Tab.Navigator initialRouteName='Utilisateur' screenOptions={{headerShown: false}}>
+          <Tab.Screen name="Événement" component={EventNavigator} options={{tabBarIcon: ({color}) => <Calendar color={color}/>}}/>
+        {eventId !== undefined && <Tab.Screen name="Produit" component={ProductNavigator} options={{tabBarIcon: ({color}) => <Box color={color}/>}}/>}
+        {eventId !== undefined && <Tab.Screen name="Commande" component={OrderNavigator} options={{tabBarIcon: ({color}) => <ShoppingCart color={color}/>}}/>}
+        <Tab.Screen name="Utilisateur" component={UserNavigator} options={{tabBarIcon: ({color}) => <User color={color}/>}}/>
         </Tab.Navigator>
     ) : (
         <AuthNavigator/>

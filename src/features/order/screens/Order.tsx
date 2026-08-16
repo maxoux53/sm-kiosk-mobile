@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useCallback, useState } from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Cart from '../../../components/Cart';
 import { OrderLine } from '../../../types/api';
 import Loader from '../../../components/Loader';
@@ -9,7 +9,6 @@ import { exportStyles } from '../../../App';
 import useMeAPI from '../../../hooks/useMeAPI';
 
 export default function Order() {
-  const navigation = useNavigation();
   const { getCart } = useCart();
   const {  } = useMeAPI();
   const [orderLines, setOrderLines] = useState<Array<OrderLine>>([]);
