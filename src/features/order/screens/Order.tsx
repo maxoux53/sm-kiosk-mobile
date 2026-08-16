@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button, Alert } from 'react-native';
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import Cart from '../../../components/Cart';
@@ -6,13 +6,12 @@ import { OrderLine } from '../../../types/api';
 import Loader from '../../../components/Loader';
 import useCart from '../../../hooks/useCart';
 import { exportStyles } from '../../../App';
-import useMeAPI from '../../../hooks/useMeAPI';
 import { useNavigation } from '@react-navigation/native';
+import { checkError } from '../../../utils/checkError';
 
 export default function Order() {
   const navigation = useNavigation();
-  const { getCart, clearCart } = useCart();
-  const {  } = useMeAPI();
+  const { getCart, clearCart, validateCartSendOrder, isLoading } = useCart();
   const [orderLines, setOrderLines] = useState<Array<OrderLine>>([]);
 
   useFocusEffect(
@@ -23,14 +22,24 @@ export default function Order() {
     }, [])
   )
 
+  const validateOrder = async () => {
+    try {
+      await validateCartSendOrder();
+      Alert.alert("Commande validée avec succès");
+      navigation.navigate('Utilisateur');
+    } catch (e) {
+      Alert.alert(checkError(e as Error))
+    }
+  };
 
   return (
     <View style={styles.container}>
+      {isLoading && <Loader/>}
       <Text style={styles.text1}>Commandes</Text>
       <View style={styles.view1}>
         <Cart orderLines={orderLines} />
         <View style={styles.view2}>
-          <TouchableOpacity style={exportStyles.button} disabled={orderLines.length === 0}>
+          <TouchableOpacity style={exportStyles.button} disabled={orderLines.length === 0} onPress={validateOrder}>
             <Text style={styles.text2}>Valider</Text>
           </TouchableOpacity>
           {orderLines.length > 0 && <Button title="Vider le panier" color="red" onPress={async () => {

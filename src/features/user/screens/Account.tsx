@@ -10,12 +10,13 @@ import { User } from '../../../types/api';
 import { Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setUserId, setEventId } from '../../../store/slice';
+import { checkError } from '../../../utils/checkError';
 
 export default function Account() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [user, setUser] = useState<User | undefined>();
-  const { getMyInfo, deleteMyAccount, isLoading, errorMessage } = useMeAPI();
+  const { getMyInfo, deleteMyAccount, isLoading } = useMeAPI();
 
   useFocusEffect(
     useCallback(() => {
@@ -24,8 +25,8 @@ export default function Account() {
           const userTemp = await getMyInfo();
           setUser(userTemp);
           dispatch(setUserId(userTemp.id));
-        } catch {
-          Alert.alert(errorMessage ?? "Erreur inconnue");
+        } catch (e) {
+          Alert.alert(checkError(e as Error))
         }
       })();
     }, [])
@@ -55,8 +56,8 @@ export default function Account() {
                   dispatch(setUserId(undefined));
                   dispatch(setEventId(undefined));
                   token.clear();
-                } catch {
-                  Alert.alert(errorMessage ?? "Erreur lors de la suppression")
+                } catch (e) {
+                  Alert.alert(checkError(e as Error))
                 }
               },
             },

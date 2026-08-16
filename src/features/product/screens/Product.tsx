@@ -12,12 +12,13 @@ import SegmentedControl from '@expo/ui/community/segmented-control';
 import { Event } from '../../../types/api';
 import { useFocusEffect } from '@react-navigation/native';
 import useCart from '../../../hooks/useCart';
+import { checkError } from '../../../utils/checkError';
 
 export default function Product() {
-  const { getMyEvent, isLoading: isLoadingEvent, errorMessage: errorMessageEvent } = useMeAPI();
-  const { getAllProductsByEvent, isLoading: isLoadingProducts, errorMessage: errorMessageProducts } = useProductAPI();
-  const { getCategoriesByEvent, isLoading: isLoadingCategories, errorMessage: errorMessageCategories } = useCategoryAPI();
-  const { addToCart, errorMessage: errorMessageCart } = useCart();
+  const { getMyEvent, isLoading: isLoadingEvent } = useMeAPI();
+  const { getAllProductsByEvent, isLoading: isLoadingProducts } = useProductAPI();
+  const { getCategoriesByEvent, isLoading: isLoadingCategories } = useCategoryAPI();
+  const { addToCart, isLoading: isLoadingCart } = useCart();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [categories, setCategories] = useState<Array<Category>>([]);
   const [products, setProducts] = useState<Array<ProductType>>([]);
@@ -32,8 +33,8 @@ export default function Product() {
           setEvent(await getMyEvent());
           setCategories(await getCategoriesByEvent(eventId));
           setProducts(await getAllProductsByEvent(eventId));
-        } catch {
-          Alert.alert('Erreur', errorMessageCategories ?? errorMessageProducts ?? errorMessageEvent ?? 'Erreur inconnue');
+        } catch (e) {
+          Alert.alert(checkError(e as Error))
         }
       })();
     }, [eventId])
@@ -54,8 +55,8 @@ export default function Product() {
 
           try {
             await addToCart(productId, quantity);
-          } catch {
-            Alert.alert('Erreur', errorMessageCart ?? "Impossible d'ajouter au panier");
+          } catch (e) {
+            Alert.alert(checkError(e as Error));
           }
         }
       },
@@ -64,7 +65,7 @@ export default function Product() {
 
   return (
     <View style={styles.container}>
-      {isLoadingEvent || isLoadingCategories || isLoadingProducts && <Loader />}
+      {isLoadingEvent || isLoadingCategories || isLoadingProducts || isLoadingCart && <Loader />}
       <Text style={styles.text1}>{event?.name}</Text>
       <View style={styles.view1}>
         <SegmentedControl

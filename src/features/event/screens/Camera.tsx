@@ -7,12 +7,13 @@ import Loader from "../../../components/Loader";
 import useMeAPI from "../../../hooks/useMeAPI";
 import { useDispatch } from 'react-redux';
 import { setEventId } from "../../../store/slice";
+import { checkError } from '../../../utils/checkError';
 
 export default function Camera() {
   const navigator = useNavigation();
   const dispatch = useDispatch();
   const isProcessingRef = useRef(false);
-  const { joinEvent, isLoading, errorMessage } = useMeAPI();
+  const { joinEvent, isLoading } = useMeAPI();
 
   return (
     <View style={styles.container}>
@@ -29,8 +30,8 @@ export default function Camera() {
           await joinEvent(id);
           dispatch(setEventId(id));
           navigator.goBack();
-        } catch {
-          Alert.alert(errorMessage ?? 'Erreur inconnue', undefined, [{ text: 'OK', onPress: () => { isProcessingRef.current = false; } }]);
+        } catch (e) {
+          Alert.alert(checkError(e as Error), undefined, [{ text: 'OK', onPress: () => { isProcessingRef.current = false; } }]);
         }
       }} barcodeScannerSettings={{
         barcodeTypes: ["qr"],

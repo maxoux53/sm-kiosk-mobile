@@ -1,4 +1,3 @@
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AuthNavigator from './features/auth/screens/Navigator';
@@ -14,13 +13,14 @@ import { Alert } from 'react-native';
 import { setUserId, setEventId } from './store/slice';
 import Loader from './components/Loader';
 import { token } from './api/secureStore';
-import { AxiosError, isAxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import { Calendar, Box, ShoppingCart, User } from 'lucide-react-native';
+import { checkError } from './utils/checkError';
 
 const Tab = createBottomTabNavigator();
 
 export default function Navigator() {
-  const { getMyInfo, getMyEvent, isLoading, errorMessage } = useMeAPI();
+  const { getMyInfo, getMyEvent, isLoading } = useMeAPI();
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.Slice.userId);
   const eventId = useSelector((state: RootState) => state.Slice.eventId);
@@ -33,7 +33,7 @@ export default function Navigator() {
         dispatch(setUserId(user.id));
       } catch (error) {
         if (isAxiosError(error) && error.response?.status !== 404) {
-          Alert.alert(errorMessage ?? error.response?.statusText?.toString() ?? "Erreur inconnue");
+          Alert.alert(checkError(error as Error));
         }
       }
     })();
@@ -49,7 +49,7 @@ export default function Navigator() {
         }
       } catch (error) {
         if (isAxiosError(error) && error.response?.status !== 404) {
-          Alert.alert(errorMessage ?? error.response?.statusText?.toString() ?? "Erreur inconnue");
+          Alert.alert(checkError(error as Error));
         }
       }
     })();

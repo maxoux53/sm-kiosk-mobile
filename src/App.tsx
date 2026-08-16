@@ -1,20 +1,17 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Button, StyleSheet } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StyleSheet } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import Navigator from './Navigator';
 
-const Tab = createBottomTabNavigator();
-
 export default function App() {
   return (
       <GestureHandlerRootView style={styles.container}>
-      <SafeAreaProvider>
-        <Provider store={store}>
-          <Navigator />
-        </Provider>
+        <SafeAreaProvider>
+          <Provider store={store}>
+            <Navigator />
+          </Provider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
   );

@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { exportStyles } from '../../../App';
 import useAuthAPI from '../../../hooks/useAuthAPI';
@@ -6,11 +6,12 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUserId } from '../../../store/slice';
 import Loader from '../../../components/Loader';
+import { checkError } from '../../../utils/checkError';
 
 export default function Login() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { login, isLoading, errorMessage } = useAuthAPI();
+  const { login, isLoading } = useAuthAPI();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -18,8 +19,8 @@ export default function Login() {
     try {
       const response = await login(email, password);
       dispatch(setUserId(response.user.id));
-    } catch {
-      Alert.alert(errorMessage ?? 'Une erreur est survenue');
+    } catch (e) {
+      Alert.alert(checkError(e as Error));
     }
   };
 

@@ -5,18 +5,19 @@ import { useCallback, useMemo, useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import useVatAPI from '../hooks/useVatAPI';
 import Loader from './Loader';
+import { checkError } from '../utils/checkError';
 
 export default function Cart({ orderLines }: { orderLines: Array<OrderLine> }) {
   const [vats, setVats] = useState<Array<Vat>>([]);
-  const { getAllVats, isLoading, errorMessage } = useVatAPI();
+  const { getAllVats, isLoading } = useVatAPI();
 
   useFocusEffect(
     useCallback(() => {
       (async () => {
         try {
           setVats(await getAllVats());
-        } catch {
-          Alert.alert(errorMessage ?? 'Erreur inconnue');
+        } catch (e) {
+          Alert.alert(checkError(e as Error))
         }
       })()
     }, [])

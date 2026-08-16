@@ -1,5 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { exportStyles } from '../../../App';
 import { useState } from 'react';
@@ -15,7 +14,6 @@ import { validateSignupForm } from '../../../utils/validateSignupForm';
 import { USER } from '../../../constants/constraints';
 
 export default function Signup() {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   const { signup, isLoading: isLoadingSignup } = useAuthAPI()
   const { uploadImage, isLoading: isLoadingUpload } = useImageAPI()
@@ -28,10 +26,7 @@ export default function Signup() {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert(
-          'Permission refusée',
-          "L'accès à la galerie est nécessaire pour choisir un avatar."
-        );
+        Alert.alert("L'accès à la galerie est nécessaire pour choisir un avatar.");
         return;
       }
 
@@ -56,8 +51,6 @@ export default function Signup() {
     }
 
     try {
-      // L'avatar doit être téléversé AVANT la création du compte pour
-      // pouvoir transmettre son identifiant dans la requête d'inscription.
       const avatarId = avatar ? await uploadImage(avatar) : undefined;
 
       const response = await signup({

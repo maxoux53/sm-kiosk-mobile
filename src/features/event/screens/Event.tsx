@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useState, useCallback, useEffect } from 'react';
-import { useCameraPermissions, CameraView } from 'expo-camera';
+import { useState, useCallback} from 'react';
+import { useCameraPermissions} from 'expo-camera';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { exportStyles } from '../../../App';
 import Loader from '../../../components/Loader';
@@ -10,8 +10,7 @@ import { Event as EventType } from '../../../types/api';
 import { isAxiosError } from 'axios';
 import { checkError } from '../../../utils/checkError';
 import useCart from '../../../hooks/useCart';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../../store/store';
+import { useDispatch } from 'react-redux';
 import { setEventId } from '../../../store/slice';
 
 export default function Event() {
@@ -21,7 +20,6 @@ export default function Event() {
   const dispatch = useDispatch();
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [event, setEvent] = useState<EventType>();
-  const eventId = useSelector((state: RootState) => state.Slice.eventId);
 
   useFocusEffect(
       useCallback(() => {

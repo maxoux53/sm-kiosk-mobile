@@ -12,7 +12,7 @@ export default function Loader() {
         setLoading(false);
       }
     })();
-  }, [])
+  }, [loading])
 
   return (
     <View style={styles.View}>
