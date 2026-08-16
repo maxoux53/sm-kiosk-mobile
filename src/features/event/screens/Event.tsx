@@ -9,25 +9,27 @@ import useMeAPI from '../../../hooks/useMeAPI';
 import { Event as EventType } from '../../../types/api';
 import { isAxiosError } from 'axios';
 import { checkError } from '../../../utils/checkError';
+import useCart from '../../../hooks/useCart';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../../store/store';
+import { setEventId } from '../../../store/slice';
 
 export default function Event() {
   const navigator = useNavigation();
   const { leaveEvent, getMyEvent, isLoading } = useMeAPI();
+  const { clearCart } = useCart();
+  const dispatch = useDispatch();
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [event, setEvent] = useState<EventType>();
+  const eventId = useSelector((state: RootState) => state.Slice.eventId);
 
   useFocusEffect(
       useCallback(() => {
         (async () => {
           try {
-            const result = await getMyEvent();
-            setEvent(result);
+            setEvent(await getMyEvent());
           } catch (error) {
-            // 404 => l'utilisateur ne participe à aucun évènement : cas normal.
-            if (isAxiosError(error) && error.response?.status === 404) {
-              setEvent(undefined);
-              return;
-            }
+            if (isAxiosError(error) && error.response?.status === 404) return;
             Alert.alert(checkError(error as Error));
           }
         })();
@@ -49,13 +51,10 @@ export default function Event() {
                 onPress={async () => {
                   try {
                     await leaveEvent(event.id);
+                    await clearCart();
                     setEvent(undefined);
+                    dispatch(setEventId(undefined))
                   } catch (error) {
-                    // 404 => le membership n'existe déjà plus : l'objectif est atteint.
-                    if (isAxiosError(error) && error.response?.status === 404) {
-                      setEvent(undefined);
-                      return;
-                    }
                     Alert.alert(checkError(error as Error));
                   }
                 }}>
